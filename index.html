@@ -382,6 +382,33 @@
 .btn:hover {
     background: #2a2f36;
 }
+/* Aggiungi questo alla fine del tuo <style> per Safari */
+.fav {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent; /* Rimuove il blu di tap su iOS */
+}
+
+.fav:active {
+    transform: scale(0.9); /* Feedback al tap */
+}
+
+/* Assicurati che i bottoni siano cliccabili */
+.btn, .city-card, .mapbtn {
+    cursor: pointer;
+    -webkit-user-select: none; /* Previene selezione testo su iOS */
+    user-select: none;
+}
+
+/* Fix per Safari input */
+input[type='text'] {
+    -webkit-appearance: none; /* Rimuove stile nativo iOS */
+    appearance: none;
+}
+
+/* Nascondi elementi con classe .hidden */
+.hidden {
+    display: none !important;
+}
     </style>
 </head>
 <body>
@@ -628,173 +655,293 @@
     </section>
 
     <script>
-    // ========== INIZIALIZZAZIONE SEMPLICE ==========
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Sito caricato!');
+    // ========== VARIABILI ==========
+    let currentCity = '';
+    
+    // ========== INIZIALIZZAZIONE ==========
+    window.onload = function() {
+        console.log('Safari - Sito caricato');
+        initAll();
+    };
+    
+    function initAll() {
+        // 1. NAVIGAZIONE CITTÀ
+        var cityCards = document.querySelectorAll('.city-card');
+        for (var i = 0; i < cityCards.length; i++) {
+            cityCards[i].addEventListener('click', cityClickHandler);
+        }
         
-        // 1. NAVIGAZIONE (questa funziona?)
-        document.querySelectorAll('.city-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const city = this.getAttribute('data-city');
-                console.log('Cliccato su:', city);
-                
-                // Nascondi home
-                document.getElementById('home').classList.add('hidden');
-                
-                // Nascondi tutte le città
-                document.querySelectorAll('[id^="city-"]').forEach(section => {
-                    section.classList.add('hidden');
-                });
-                
-                // Mostra la città selezionata
-                document.getElementById('city-' + city).classList.remove('hidden');
-                
-                // Mostra il pulsante torna indietro
-                document.querySelectorAll('.backToHome').forEach(btn => {
-                    btn.style.display = 'inline-flex';
-                });
-            });
+        // 2. PULSANTI INDIETRO
+        var backButtons = document.querySelectorAll('.backToHome');
+        for (var i = 0; i < backButtons.length; i++) {
+            backButtons[i].addEventListener('click', backHomeHandler);
+        }
+        
+        // 3. PULSANTI SVUOTA
+        var clearButtons = document.querySelectorAll('[id^="clearFavs-"]');
+        for (var i = 0; i < clearButtons.length; i++) {
+            clearButtons[i].addEventListener('click', clearFavsHandler);
+        }
+        
+        // 4. STELLE PREFERITI (event delegation per Safari)
+        document.body.addEventListener('click', function(e) {
+            if (e.target && e.target.classList && e.target.classList.contains('fav')) {
+                toggleFavoriteSafari(e.target);
+            }
         });
         
-        // 2. TORNA ALLA HOME (funziona?)
-        document.querySelectorAll('.backToHome').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.getElementById('home').classList.remove('hidden');
-                document.querySelectorAll('[id^="city-"]').forEach(section => {
-                    section.classList.add('hidden');
-                });
-                document.querySelectorAll('.backToHome').forEach(b => {
-                    b.style.display = 'none';
-                });
-            });
-        });
+        // 5. RICERCA
+        var searchInputs = document.querySelectorAll('input[type="text"]');
+        for (var i = 0; i < searchInputs.length; i++) {
+            searchInputs[i].addEventListener('input', searchHandler);
+        }
         
-        // 3. PREFERITI SEMPLICE
-        document.addEventListener('click', function(e) {
-            // Se clicchi su una stella
-            if (e.target.classList.contains('fav')) {
-                const favBtn = e.target;
-                console.log('Cliccato su stella!');
-                
-                // Cambia colore
-                favBtn.classList.toggle('off');
-                
-                // Salva nel localStorage
-                const card = favBtn.closest('.card');
-                const restaurantName = card.querySelector('b').textContent.trim();
-                const citySection = card.closest('[id^="city-"]');
-                const city = citySection ? citySection.id.replace('city-', '') : 'unknown';
-                
-                const key = 'fav_' + city;
-                let favorites = JSON.parse(localStorage.getItem(key) || '[]');
-                
-                if (favBtn.classList.contains('off')) {
-                    // Rimuovi
-                    favorites = favorites.filter(name => name !== restaurantName);
-                    console.log('Rimosso:', restaurantName);
-                } else {
-                    // Aggiungi
-                    if (!favorites.includes(restaurantName)) {
-                        favorites.push(restaurantName);
-                    }
-                    console.log('Aggiunto:', restaurantName);
-                }
-                
-                localStorage.setItem(key, JSON.stringify(favorites));
-                updateFavoritesDisplay(city);
+        // 6. CARICA PREFERITI ESISTENTI
+        loadExistingFavorites();
+    }
+    
+    // ========== HANDLER FUNCTIONS ==========
+    function cityClickHandler() {
+        var city = this.getAttribute('data-city');
+        currentCity = city;
+        
+        // Nascondi home
+        document.getElementById('home').style.display = 'none';
+        
+        // Nascondi tutte le città
+        var citySections = document.querySelectorAll('[id^="city-"]');
+        for (var i = 0; i < citySections.length; i++) {
+            citySections[i].style.display = 'none';
+        }
+        
+        // Mostra città selezionata
+        var selectedCity = document.getElementById('city-' + city);
+        if (selectedCity) {
+            selectedCity.style.display = 'block';
+        }
+        
+        // Mostra pulsanti indietro
+        var backBtns = document.querySelectorAll('.backToHome');
+        for (var i = 0; i < backBtns.length; i++) {
+            backBtns[i].style.display = 'inline-flex';
+        }
+        
+        updateFavSection(city);
+    }
+    
+    function backHomeHandler() {
+        document.getElementById('home').style.display = 'block';
+        
+        var citySections = document.querySelectorAll('[id^="city-"]');
+        for (var i = 0; i < citySections.length; i++) {
+            citySections[i].style.display = 'none';
+        }
+        
+        var backBtns = document.querySelectorAll('.backToHome');
+        for (var i = 0; i < backBtns.length; i++) {
+            backBtns[i].style.display = 'none';
+        }
+    }
+    
+    function toggleFavoriteSafari(favBtn) {
+        // Toggle classe visuale IMMEDIATO (per feedback)
+        if (favBtn.classList.contains('off')) {
+            favBtn.classList.remove('off');
+            favBtn.innerHTML = '⭐'; // Stella piena
+        } else {
+            favBtn.classList.add('off');
+            favBtn.innerHTML = '★'; // Stella vuota
+        }
+        
+        // Trova nome ristorante e città
+        var card = favBtn.closest('.card');
+        if (!card) return;
+        
+        var restaurantName = '';
+        var bElement = card.querySelector('b');
+        if (bElement) {
+            restaurantName = bElement.textContent.trim();
+        }
+        
+        var city = '';
+        var section = card.closest('[id^="city-"]');
+        if (section) {
+            city = section.id.replace('city-', '');
+        }
+        
+        if (!city || !restaurantName) return;
+        
+        // Salva in localStorage
+        var key = 'fav_' + city;
+        var favorites = [];
+        
+        try {
+            var saved = localStorage.getItem(key);
+            if (saved) {
+                favorites = JSON.parse(saved);
+            }
+        } catch(e) {
+            console.log('Errore localStorage:', e);
+            favorites = [];
+        }
+        
+        if (favBtn.classList.contains('off')) {
+            // Rimuovi
+            var index = favorites.indexOf(restaurantName);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            }
+        } else {
+            // Aggiungi
+            if (favorites.indexOf(restaurantName) === -1) {
+                favorites.push(restaurantName);
+            }
+        }
+        
+        try {
+            localStorage.setItem(key, JSON.stringify(favorites));
+        } catch(e) {
+            console.log('Errore salvataggio:', e);
+        }
+        
+        updateFavSection(city);
+        
+        // Feedback visivo semplice (funziona su Safari)
+        favBtn.style.transform = 'scale(1.3)';
+        setTimeout(function() {
+            favBtn.style.transform = 'scale(1)';
+        }, 300);
+    }
+    
+    function clearFavsHandler() {
+        var city = this.id.replace('clearFavs-', '');
+        
+        if (confirm('Svuotare tutti i preferiti di ' + city + '?')) {
+            try {
+                localStorage.removeItem('fav_' + city);
+            } catch(e) {
+                console.log('Errore cancellazione:', e);
             }
             
-            // Se clicchi su "Svuota"
-            if (e.target.id && e.target.id.startsWith('clearFavs-')) {
-                const city = e.target.id.replace('clearFavs-', '');
-                if (confirm('Sicuro di voler cancellare tutti i preferiti?')) {
-                    localStorage.removeItem('fav_' + city);
-                    document.querySelectorAll(`#city-${city} .fav`).forEach(fav => {
-                        fav.classList.add('off');
-                    });
-                    updateFavoritesDisplay(city);
-                }
+            // Resetta tutte le stelle
+            var stars = document.querySelectorAll('#city-' + city + ' .fav');
+            for (var i = 0; i < stars.length; i++) {
+                stars[i].classList.add('off');
+                stars[i].innerHTML = '★';
             }
-        });
+            
+            updateFavSection(city);
+        }
+    }
+    
+    function searchHandler() {
+        var searchTerm = this.value.toLowerCase();
+        var section = this.closest('section');
+        if (!section) return;
         
-        // 4. RICERCA SEMPLICE
-        document.querySelectorAll('input[type="text"]').forEach(input => {
-            input.addEventListener('input', function() {
-                const searchText = this.value.toLowerCase();
-                const section = this.closest('section');
-                
-                section.querySelectorAll('.card').forEach(card => {
-                    const text = card.textContent.toLowerCase();
-                    if (text.includes(searchText) || searchText === '') {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            });
-        });
-        
-        // 5. CARICA PREFERITI ALL'AVVIO
-        loadFavoritesOnStart();
-    });
+        var cards = section.querySelectorAll('.card');
+        for (var i = 0; i < cards.length; i++) {
+            var text = cards[i].textContent.toLowerCase();
+            if (text.indexOf(searchTerm) > -1 || searchTerm === '') {
+                cards[i].style.display = 'block';
+            } else {
+                cards[i].style.display = 'none';
+            }
+        }
+    }
     
     // ========== FUNZIONI AUSILIARIE ==========
-    function updateFavoritesDisplay(city) {
-        const favoritesList = document.querySelector(`#city-${city} .favorites .list`);
-        if (!favoritesList) return;
+    function loadExistingFavorites() {
+        var cities = ['shenzhen', 'canton', 'chongqing'];
         
-        const key = 'fav_' + city;
-        const favorites = JSON.parse(localStorage.getItem(key) || '[]');
+        for (var c = 0; c < cities.length; c++) {
+            var city = cities[c];
+            var key = 'fav_' + city;
+            var favorites = [];
+            
+            try {
+                var saved = localStorage.getItem(key);
+                if (saved) {
+                    favorites = JSON.parse(saved);
+                }
+            } catch(e) {
+                console.log('Errore caricamento preferiti per', city, ':', e);
+            }
+            
+            var section = document.getElementById('city-' + city);
+            if (!section) continue;
+            
+            var cards = section.querySelectorAll('.card');
+            for (var i = 0; i < cards.length; i++) {
+                var card = cards[i];
+                var bElement = card.querySelector('b');
+                if (!bElement) continue;
+                
+                var restaurantName = bElement.textContent.trim();
+                var favBtn = card.querySelector('.fav');
+                
+                if (favBtn) {
+                    if (favorites.indexOf(restaurantName) > -1) {
+                        favBtn.classList.remove('off');
+                        favBtn.innerHTML = '⭐';
+                    } else {
+                        favBtn.classList.add('off');
+                        favBtn.innerHTML = '★';
+                    }
+                }
+            }
+            
+            updateFavSection(city);
+        }
+    }
+    
+    function updateFavSection(city) {
+        var favSection = document.querySelector('#city-' + city + ' .favorites .list');
+        if (!favSection) return;
+        
+        var key = 'fav_' + city;
+        var favorites = [];
+        
+        try {
+            var saved = localStorage.getItem(key);
+            if (saved) {
+                favorites = JSON.parse(saved);
+            }
+        } catch(e) {
+            favorites = [];
+        }
         
         if (favorites.length === 0) {
-            favoritesList.innerHTML = '<p style="color: #888; font-style: italic;">Nessun preferito ancora</p>';
+            favSection.innerHTML = '<p style="color: #888; padding: 20px; text-align: center;">Nessun preferito</p>';
             return;
         }
         
-        // Per semplicità, mostriamo solo i nomi
-        let html = '<ul style="list-style: none; padding: 0;">';
-        favorites.forEach(fav => {
-            html += `<li style="padding: 8px; border-bottom: 1px solid #333;">⭐ ${fav}</li>`;
-        });
-        html += '</ul>';
+        var html = '<div style="display: flex; flex-wrap: wrap; gap: 10px;">';
+        for (var i = 0; i < favorites.length; i++) {
+            html += '<div style="background: #2a2f36; padding: 10px; border-radius: 8px; min-width: 200px;">';
+            html += '⭐ ' + favorites[i];
+            html += '</div>';
+        }
+        html += '</div>';
         
-        favoritesList.innerHTML = html;
+        favSection.innerHTML = html;
     }
     
-    function loadFavoritesOnStart() {
-        ['shenzhen', 'canton', 'chongqing'].forEach(city => {
-            const key = 'fav_' + city;
-            const favorites = JSON.parse(localStorage.getItem(key) || '[]');
-            const section = document.getElementById('city-' + city);
-            
-            if (section) {
-                section.querySelectorAll('.card').forEach(card => {
-                    const restaurantName = card.querySelector('b').textContent.trim();
-                    const favBtn = card.querySelector('.fav');
-                    
-                    if (favorites.includes(restaurantName)) {
-                        favBtn.classList.remove('off');
-                    } else {
-                        favBtn.classList.add('off');
-                    }
-                });
-                
-                updateFavoritesDisplay(city);
-            }
-        });
-    }
-    
-    // ========== DEBUG ==========
-    // Aggiungi un pulsante debug se vuoi
-    const debugBtn = document.createElement('button');
-    debugBtn.textContent = '🛠️ Debug';
-    debugBtn.style.cssText = 'position: fixed; bottom: 10px; right: 10px; z-index: 9999; padding: 10px; background: red; color: white; border: none; border-radius: 5px;';
-    debugBtn.addEventListener('click', function() {
-        console.log('LocalStorage:', localStorage);
-        console.log('Preferiti Shenzhen:', JSON.parse(localStorage.getItem('fav_shenzhen') || '[]'));
-        alert('Controlla la console (F12) per i debug info!');
-    });
-    document.body.appendChild(debugBtn);
+    // ========== DEBUG PER SAFARI ==========
+    // Aggiungi un semplice debug
+    setTimeout(function() {
+        console.log('Safari Test - Script eseguito');
+        
+        // Test localStorage
+        try {
+            localStorage.setItem('test_safari', 'works');
+            var test = localStorage.getItem('test_safari');
+            console.log('localStorage test:', test === 'works' ? 'OK' : 'FAIL');
+            localStorage.removeItem('test_safari');
+        } catch(e) {
+            console.log('localStorage potrebbe essere bloccato (modalità privata?)');
+        }
+    }, 1000);
 </script>
 </body>
 </html>
