@@ -237,6 +237,104 @@
             .card .icon { font-size: 18px; }
             .badge { font-size: 11px; padding: 3px 8px; }
         }
+        /* NOTIFICHE */
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+/* CARD PREFERITI */
+.favorite-card {
+    border-color: #ffd166 !important;
+    background: linear-gradient(135deg, #1a1d22, #12151a) !important;
+}
+
+.favorite-card .fav {
+    color: #ffd166 !important;
+}
+
+/* STATO ATTIVO PREFERITI */
+.fav:not(.off) {
+    color: #ffd166 !important;
+    text-shadow: 0 0 10px rgba(255, 209, 102, 0.5);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* SEZIONE PREFERITI */
+.favorites {
+    background: rgba(26, 29, 34, 0.7);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+    border: 1px solid #2a2f36;
+}
+
+.favorites h2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0;
+}
+
+.favorites .list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 12px;
+}
+
+/* SCROLLBAR PERSONALIZZATA */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1d22;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2a2f36;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3a3f48;
+}
+
+/* HIGHLIGHT RICERCA */
+.highlight {
+    background-color: rgba(138, 180, 255, 0.2);
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+/* RESPONSIVE MIGLIORATO */
+@media (max-width: 768px) {
+    .favorites {
+        padding: 12px;
+    }
+    
+    .favorites .list {
+        max-height: 200px;
+    }
+}
+
+/* STATISTICHE PREFERITI */
+.fav-stats {
+    font-size: 14px;
+    color: var(--muted);
+    margin-left: 12px;
+}
     </style>
 </head>
 <body>
