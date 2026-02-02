@@ -581,145 +581,144 @@
     </section>
 
     <script>
-    // ========== VARIABILI GLOBALI ==========
-    const FAV_KEY_PREFIX = 'fav_restaurants_';
-    let currentCity = '';
-
-    // ========== INIZIALIZZAZIONE ==========
+    // ========== INIZIALIZZAZIONE SEMPLICE ==========
     document.addEventListener('DOMContentLoaded', function() {
-        initNavigation();
-        initFavorites();
-        initSearch();
-        restoreFavorites();
-    });
-
-    // ========== NAVIGAZIONE ==========
-    function initNavigation() {
-        // Click sulle card città
+        console.log('Sito caricato!');
+        
+        // 1. NAVIGAZIONE (questa funziona?)
         document.querySelectorAll('.city-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const city = card.dataset.city;
-                currentCity = city;
-                showCity(city);
+            card.addEventListener('click', function() {
+                const city = this.getAttribute('data-city');
+                console.log('Cliccato su:', city);
+                
+                // Nascondi home
+                document.getElementById('home').classList.add('hidden');
+                
+                // Nascondi tutte le città
+                document.querySelectorAll('[id^="city-"]').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                // Mostra la città selezionata
+                document.getElementById('city-' + city).classList.remove('hidden');
+                
+                // Mostra il pulsante torna indietro
+                document.querySelectorAll('.backToHome').forEach(btn => {
+                    btn.style.display = 'inline-flex';
+                });
             });
         });
-
-        // Pulsanti "Torna alle città"
+        
+        // 2. TORNA ALLA HOME (funziona?)
         document.querySelectorAll('.backToHome').forEach(btn => {
-            btn.addEventListener('click', () => {
-                showHome();
-            });
-        });
-
-        // Pulsanti "Svuota preferiti"
-        document.querySelectorAll('[id^="clearFavs-"]').forEach(btn => {
             btn.addEventListener('click', function() {
-                const city = this.id.replace('clearFavs-', '');
-                clearFavorites(city);
+                document.getElementById('home').classList.remove('hidden');
+                document.querySelectorAll('[id^="city-"]').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                document.querySelectorAll('.backToHome').forEach(b => {
+                    b.style.display = 'none';
+                });
             });
         });
-    }
-
-    function showCity(city) {
-        document.getElementById('home').classList.add('hidden');
-        document.querySelectorAll('[id^="city-"]').forEach(s => s.classList.add('hidden'));
-        document.getElementById('city-' + city).classList.remove('hidden');
-        document.querySelectorAll('.backToHome').forEach(btn => btn.style.display = 'inline-flex');
         
-        // Aggiorna preferiti per questa città
-        updateFavoritesSection(city);
-        
-        // Focus sulla barra di ricerca
-        const searchInput = document.getElementById('search-' + city);
-        if (searchInput) {
-            setTimeout(() => searchInput.focus(), 100);
-        }
-    }
-
-    function showHome() {
-        document.getElementById('home').classList.remove('hidden');
-        document.querySelectorAll('[id^="city-"]').forEach(s => s.classList.add('hidden'));
-        document.querySelectorAll('.backToHome').forEach(b => b.style.display = 'none');
-        currentCity = '';
-    }
-
-    // ========== PREFERITI ==========
-    function initFavorites() {
-        // Aggiungi evento click a tutti i cuori
+        // 3. PREFERITI SEMPLICE
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('fav') || 
-                e.target.closest('.fav')) {
+            // Se clicchi su una stella
+            if (e.target.classList.contains('fav')) {
+                const favBtn = e.target;
+                console.log('Cliccato su stella!');
                 
-                const favBtn = e.target.classList.contains('fav') ? 
-                    e.target : e.target.closest('.fav');
+                // Cambia colore
+                favBtn.classList.toggle('off');
+                
+                // Salva nel localStorage
                 const card = favBtn.closest('.card');
+                const restaurantName = card.querySelector('b').textContent.trim();
+                const citySection = card.closest('[id^="city-"]');
+                const city = citySection ? citySection.id.replace('city-', '') : 'unknown';
                 
-                if (card) {
-                    toggleFavorite(card, favBtn);
+                const key = 'fav_' + city;
+                let favorites = JSON.parse(localStorage.getItem(key) || '[]');
+                
+                if (favBtn.classList.contains('off')) {
+                    // Rimuovi
+                    favorites = favorites.filter(name => name !== restaurantName);
+                    console.log('Rimosso:', restaurantName);
+                } else {
+                    // Aggiungi
+                    if (!favorites.includes(restaurantName)) {
+                        favorites.push(restaurantName);
+                    }
+                    console.log('Aggiunto:', restaurantName);
+                }
+                
+                localStorage.setItem(key, JSON.stringify(favorites));
+                updateFavoritesDisplay(city);
+            }
+            
+            // Se clicchi su "Svuota"
+            if (e.target.id && e.target.id.startsWith('clearFavs-')) {
+                const city = e.target.id.replace('clearFavs-', '');
+                if (confirm('Sicuro di voler cancellare tutti i preferiti?')) {
+                    localStorage.removeItem('fav_' + city);
+                    document.querySelectorAll(`#city-${city} .fav`).forEach(fav => {
+                        fav.classList.add('off');
+                    });
+                    updateFavoritesDisplay(city);
                 }
             }
         });
-    }
-
-    function toggleFavorite(card, favBtn) {
-        const restaurantName = card.querySelector('b').textContent.trim();
-        const city = getCityFromCard(card);
         
-        // Ottieni preferiti attuali
-        const favorites = getFavorites(city);
-        const isCurrentlyFavorite = favorites.includes(restaurantName);
-        
-        if (isCurrentlyFavorite) {
-            // Rimuovi dai preferiti
-            const index = favorites.indexOf(restaurantName);
-            if (index > -1) {
-                favorites.splice(index, 1);
-            }
-            favBtn.classList.add('off');
-            showNotification(`❌ Rimosso dai preferiti: ${restaurantName}`);
-        } else {
-            // Aggiungi ai preferiti
-            favorites.push(restaurantName);
-            favBtn.classList.remove('off');
-            showNotification(`⭐ Aggiunto ai preferiti: ${restaurantName}`);
-        }
-        
-        // Salva
-        saveFavorites(city, favorites);
-        updateFavoritesSection(city);
-    }
-
-    function getFavorites(city) {
-        const key = FAV_KEY_PREFIX + city;
-        const saved = localStorage.getItem(key);
-        return saved ? JSON.parse(saved) : [];
-    }
-
-    function saveFavorites(city, favorites) {
-        const key = FAV_KEY_PREFIX + city;
-        localStorage.setItem(key, JSON.stringify(favorites));
-    }
-
-    function clearFavorites(city) {
-        if (confirm(`Sicuro di voler svuotare tutti i preferiti di ${city}?`)) {
-            const key = FAV_KEY_PREFIX + city;
-            localStorage.removeItem(key);
-            
-            // Resetta tutti i cuori
-            document.querySelectorAll(`#city-${city} .fav`).forEach(fav => {
-                fav.classList.add('off');
+        // 4. RICERCA SEMPLICE
+        document.querySelectorAll('input[type="text"]').forEach(input => {
+            input.addEventListener('input', function() {
+                const searchText = this.value.toLowerCase();
+                const section = this.closest('section');
+                
+                section.querySelectorAll('.card').forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    if (text.includes(searchText) || searchText === '') {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
             });
-            
-            updateFavoritesSection(city);
-            showNotification(`🗑️ Preferiti di ${city} cancellati`);
+        });
+        
+        // 5. CARICA PREFERITI ALL'AVVIO
+        loadFavoritesOnStart();
+    });
+    
+    // ========== FUNZIONI AUSILIARIE ==========
+    function updateFavoritesDisplay(city) {
+        const favoritesList = document.querySelector(`#city-${city} .favorites .list`);
+        if (!favoritesList) return;
+        
+        const key = 'fav_' + city;
+        const favorites = JSON.parse(localStorage.getItem(key) || '[]');
+        
+        if (favorites.length === 0) {
+            favoritesList.innerHTML = '<p style="color: #888; font-style: italic;">Nessun preferito ancora</p>';
+            return;
         }
+        
+        // Per semplicità, mostriamo solo i nomi
+        let html = '<ul style="list-style: none; padding: 0;">';
+        favorites.forEach(fav => {
+            html += `<li style="padding: 8px; border-bottom: 1px solid #333;">⭐ ${fav}</li>`;
+        });
+        html += '</ul>';
+        
+        favoritesList.innerHTML = html;
     }
-
-    function restoreFavorites() {
-        // Per ogni città, ripristina lo stato dei preferiti
+    
+    function loadFavoritesOnStart() {
         ['shenzhen', 'canton', 'chongqing'].forEach(city => {
-            const favorites = getFavorites(city);
-            const section = document.getElementById(`city-${city}`);
+            const key = 'fav_' + city;
+            const favorites = JSON.parse(localStorage.getItem(key) || '[]');
+            const section = document.getElementById('city-' + city);
             
             if (section) {
                 section.querySelectorAll('.card').forEach(card => {
@@ -733,160 +732,22 @@
                     }
                 });
                 
-                updateFavoritesSection(city);
+                updateFavoritesDisplay(city);
             }
         });
     }
-
-    function updateFavoritesSection(city) {
-        const favorites = getFavorites(city);
-        const favoritesList = document.querySelector(`#city-${city} .favorites .list`);
-        
-        if (!favoritesList) return;
-        
-        if (favorites.length === 0) {
-            favoritesList.innerHTML = '<p style="color: var(--muted); font-style: italic;">Nessun ristorante nei preferiti</p>';
-            return;
-        }
-        
-        let html = '';
-        const section = document.getElementById(`city-${city}`);
-        
-        favorites.forEach(favName => {
-            // Trova la card corrispondente
-            const cards = section.querySelectorAll('.card');
-            let cardHtml = '';
-            
-            cards.forEach(card => {
-                if (card.querySelector('b').textContent.trim() === favName) {
-                    cardHtml = card.innerHTML;
-                }
-            });
-            
-            if (cardHtml) {
-                html += `<div class="card favorite-card">${cardHtml}</div>`;
-            }
-        });
-        
-        favoritesList.innerHTML = html;
-        
-        // Ri-attacca gli eventi ai nuovi cuori
-        favoritesList.querySelectorAll('.fav').forEach(favBtn => {
-            favBtn.addEventListener('click', function() {
-                const card = this.closest('.card');
-                toggleFavorite(card, this);
-            });
-        });
-    }
-
-    function getCityFromCard(card) {
-        const section = card.closest('[id^="city-"]');
-        if (section) {
-            return section.id.replace('city-', '');
-        }
-        return currentCity;
-    }
-
-    // ========== RICERCA MIGLIORATA ==========
-    function initSearch() {
-        document.querySelectorAll('input[type="text"]').forEach(input => {
-            input.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase().trim();
-                const section = this.closest('section');
-                const cards = section.querySelectorAll('.card:not(.favorite-card)');
-                
-                let visibleCount = 0;
-                
-                cards.forEach(card => {
-                    const text = card.textContent.toLowerCase();
-                    const name = card.querySelector('b').textContent.toLowerCase();
-                    const badges = card.querySelectorAll('.badge');
-                    let badgeText = '';
-                    badges.forEach(badge => {
-                        badgeText += badge.textContent.toLowerCase() + ' ';
-                    });
-                    
-                    // Cerca in nome, testo completo e badge
-                    const matches = name.includes(searchTerm) || 
-                                   text.includes(searchTerm) || 
-                                   badgeText.includes(searchTerm);
-                    
-                    if (matches || searchTerm === '') {
-                        card.style.display = 'block';
-                        visibleCount++;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-                
-                // Mostra/nascondi gli h2 in base ai risultati
-                section.querySelectorAll('h2').forEach(h2 => {
-                    const nextCards = [];
-                    let nextElement = h2.nextElementSibling;
-                    
-                    while (nextElement && nextElement.tagName !== 'H2') {
-                        if (nextElement.classList.contains('card')) {
-                            nextCards.push(nextElement);
-                        }
-                        nextElement = nextElement.nextElementSibling;
-                    }
-                    
-                    const hasVisibleCards = nextCards.some(card => 
-                        card.style.display !== 'none'
-                    );
-                    
-                    h2.style.display = hasVisibleCards ? 'block' : 'none';
-                });
-            });
-        });
-    }
-
-    // ========== UTILITY ==========
-    function showNotification(message) {
-        // Crea notifica temporanea
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--card);
-            color: var(--txt);
-            padding: 12px 20px;
-            border-radius: 8px;
-            border: 1px solid var(--accent);
-            z-index: 9999;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s ease-out;
-        `;
-        
-        // Aggiungi stile per l'animazione
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        notification.textContent = message;
-        document.body.appendChild(notification);
-        
-        // Rimuovi dopo 3 secondi
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease-in forwards';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-    }
-
-    // ========== PWA OFFLINE SUPPORT ==========
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').catch(err => {
-                console.log('Service Worker non registrato:', err);
-            });
-        });
-    }
+    
+    // ========== DEBUG ==========
+    // Aggiungi un pulsante debug se vuoi
+    const debugBtn = document.createElement('button');
+    debugBtn.textContent = '🛠️ Debug';
+    debugBtn.style.cssText = 'position: fixed; bottom: 10px; right: 10px; z-index: 9999; padding: 10px; background: red; color: white; border: none; border-radius: 5px;';
+    debugBtn.addEventListener('click', function() {
+        console.log('LocalStorage:', localStorage);
+        console.log('Preferiti Shenzhen:', JSON.parse(localStorage.getItem('fav_shenzhen') || '[]'));
+        alert('Controlla la console (F12) per i debug info!');
+    });
+    document.body.appendChild(debugBtn);
 </script>
 </body>
 </html>
