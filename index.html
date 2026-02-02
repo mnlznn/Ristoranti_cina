@@ -33,6 +33,8 @@
             margin: 0;
             padding: 16px;
             line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         a {
@@ -72,56 +74,7 @@
             display: block;
             font-size: 18px;
             margin-bottom: 10px;
-            padding-right: 50px;
-            line-height: 1.4;
-        }
-        
-        .card .icon {
-            font-size: 20px;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-        
-        .fav {
-            position: absolute;
-            right: 16px;
-            top: 16px;
-            font-size: 24px;
-            color: #ffd166;
-            cursor: pointer;
-            z-index: 50;
-            background: rgba(0,0,0,0.4);
-            border-radius: 8px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        
-        .fav:hover {
-            background: rgba(0,0,0,0.6);
-        }
-        
-        .fav.off {
-            color: #666;
-        }
-        
-        .badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 8px 0 12px;
-        }
-        
-        .badge {
-            font-size: 12px;
-            color: #ddd;
-            border: 1px solid #2a2f36;
-            padding: 4px 10px;
-            border-radius: 999px;
-            background: #14161b;
+            padding-right: 80px;
         }
         
         .card .meta {
@@ -131,8 +84,9 @@
         }
         
         .card .meta br {
-            margin: 6px 0;
             display: block;
+            content: "";
+            margin: 6px 0;
         }
         
         .home-grid {
@@ -148,7 +102,7 @@
             background: #12151a;
             padding: 20px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, border-color 0.2s;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -178,7 +132,9 @@
         .controls {
             position: sticky;
             top: 0;
-            background: rgba(14,15,18,0.95);
+            background: linear-gradient(180deg, rgba(14,15,18,0.98) 0%, rgba(14,15,18,0.85) 100%);
+            backdrop-filter: saturate(180%) blur(10px);
+            -webkit-backdrop-filter: saturate(180%) blur(10px);
             padding: 16px 0;
             z-index: 100;
             border-bottom: 1px solid var(--line);
@@ -201,6 +157,11 @@
             font-size: 16px;
         }
         
+        .controls input[type='text']:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
         .btn {
             border: 1px solid #2a2f36;
             background: #1a1d22;
@@ -212,11 +173,76 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .btn:hover {
+            background: #20232a;
+            border-color: #3a3f48;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
         }
         
         .backToHome {
             margin-bottom: 16px;
             display: none;
+        }
+        
+        .fav {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            font-size: 24px;
+            color: #ffd166;
+            cursor: pointer;
+            user-select: none;
+            z-index: 5;
+            padding: 6px 8px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .fav:hover {
+            background: rgba(0,0,0,0.6);
+            transform: scale(1.1);
+        }
+        
+        .fav.off {
+            color: #666;
+        }
+        
+        .badges {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 1;
+            max-width: 120px;
+            text-align: right;
+        }
+        
+        .badge {
+            font-size: 12px;
+            color: #ddd;
+            border: 1px solid #2a2f36;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #14161b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .mapbtn {
@@ -228,19 +254,183 @@
             background: #1a1d22;
             color: #81c9ff;
             text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .mapbtn:hover {
+            background: #20232a;
+            border-color: #3a3f48;
+        }
+        
+        #backToTop {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #20232a;
+            color: #fff;
+            border: 1px solid #2a2f36;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+            z-index: 200;
+            font-size: 20px;
+        }
+        
+        #backToTop.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        #backToTop:hover {
+            background: #2a2f36;
+            transform: scale(1.1);
+        }
+        
+        .city-wrap h1 {
+            margin-top: 10px;
+        }
+        
+        .city-wrap h1 small {
+            color: #9fb3ff;
+            font-weight: 400;
+            font-size: 18px;
+        }
+        
+        .city-wrap .favorites {
+            margin: 20px 0;
+        }
+        
+        .city-wrap .favorites h2 {
+            color: #f7cc66;
+            margin: 0 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .city-wrap .favorites .empty {
+            color: var(--muted);
+            font-size: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px dashed var(--line);
+            border-radius: 8px;
+        }
+        
+        .card b .icon {
+            margin-right: 8px;
+            font-size: 20px;
         }
         
         @media (max-width: 640px) {
-            body { padding: 12px; }
-            .card b { font-size: 16px; padding-right: 45px; }
-            .fav { right: 12px; top: 12px; width: 36px; height: 36px; font-size: 20px; }
-            .card .icon { font-size: 18px; }
-            .badge { font-size: 11px; padding: 3px 8px; }
+            body {
+                padding: 12px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            h2 {
+                font-size: 18px;
+                margin: 20px 0 10px;
+            }
+            
+            .card {
+                padding: 14px;
+                margin: 12px 0;
+            }
+            
+            .card b {
+                padding-right: 70px;
+                font-size: 16px;
+            }
+            
+            .badges {
+                max-width: 90px;
+            }
+            
+            .badge {
+                font-size: 11px;
+                padding: 3px 6px;
+            }
+            
+            .fav {
+                left: 12px;
+                top: 12px;
+                width: 36px;
+                height: 36px;
+                font-size: 20px;
+            }
+            
+            .controls {
+                padding: 12px 0;
+            }
+            
+            .controls input[type='text'] {
+                padding: 10px 14px;
+                font-size: 15px;
+            }
+            
+            .btn {
+                padding: 9px 14px;
+                font-size: 14px;
+            }
+            
+            .home-grid {
+                gap: 12px;
+                margin: 16px 0 20px;
+            }
+            
+            .city-card {
+                padding: 16px;
+                min-height: 100px;
+            }
+            
+            .city-name {
+                font-size: 18px;
+            }
+            
+            .city-meta {
+                font-size: 13px;
+            }
+            
+            #backToTop {
+                right: 16px;
+                bottom: 16px;
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            body {
+                padding: 10px;
+            }
+            
+            .home-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card b {
+                padding-right: 60px;
+            }
+            
+            .badges {
+                max-width: 80px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- HOME PAGE -->
+    <!-- Home Page -->
     <section id='home'>
         <h1>Ristoranti Cina</h1>
         <p class='muted'>Scegli una città per aprire la guida locale.</p>
@@ -260,267 +450,1162 @@
         </div>
     </section>
 
-    <!-- SHENZHEN (27 ristoranti) -->
-    <section id='city-shenzhen' class='hidden'>
+    <!-- Shenzhen Section -->
+    <section id='city-shenzhen' class='city-wrap hidden'>
         <div class='city-titlebar'>
-            <button class='backToHome btn'>← Città</button>
+            <button class='backToHome btn' title='Torna alla selezione'>← Città</button>
             <h1>Shenzhen <small>· guida locale</small></h1>
         </div>
-        
         <div class='controls'>
             <div class='row'>
                 <input id='search-shenzhen' placeholder='Cerca in Shenzhen...'>
             </div>
         </div>
-        
         <div class='favorites'>
             <h2>Preferiti <button class='btn' id='clearFavs-shenzhen' style='margin-left:auto'>Svuota</button></h2>
             <div class='list'></div>
         </div>
-        
         <h1>Shenzhen — Lista Finale (27)</h1>
         
         <h2>DONGMEN E LOUHOU</h2>
-        <div class='card'><b><span class='icon'>🍵</span>Daoxiang (East Gate Centre City Shop)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 13</span><span class='badge'>DONGMEN E LOUHOU</span></div><div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cantonese<br>Prezzo medio: 13 ¥<br>Voto medio: 4.6<br>Indirizzo: 东门中路号东门中心城层3F<br><a href='https://surl.amap.com/bmKP8C619413' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🌶️</span>Benluobo Liuyang Restaurant (Luohu Branch)</b><div class='badges'><span class='badge'>★ 4.9</span><span class='badge'>¥ 67</span><span class='badge'>DONGMEN E LOUHOU</span></div><div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cucina Hunan piccantina<br>Prezzo medio: 67 ¥<br>Voto medio: 4.9<br>Indirizzo: Luohu3002, Jiefang Road No. Shenzhen Wenheyou F F3<br><a href='https://surl.amap.com/bmiTUvo1kgaz' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍵</span>珧记饭店</b><div class='badges'><span class='badge'>DONGMEN E LOUHOU</span></div><div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cantonese<br>Indirizzo: —<br><a href='https://surl.amap.com/dC95vNQPfOO' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍵</span>Chu Xiang Lou · Ristorante di Dim Sum Cantonese</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 78</span><span class='badge'>DONGMEN E LOUHOU</span></div><div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cantonese<br>Prezzo medio: 78 ¥<br>Voto medio: 4.7<br>Indirizzo: 人民南路3009-7号储香楼<br><a href='https://surl.amap.com/bmmsCauTdds' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍢</span>Fenghao Barbecue Yueshi Snack Booth (International Trade Huijin Tianlang Shop)</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 92</span><span class='badge'>DONGMEN E LOUHOU</span></div><div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: BBQ + spaghetti<br>Prezzo medio: 92 ¥<br>Voto medio: 4.4<br>Indirizzo: 汇金天琅大厦(国贸地铁站B口步行460米)<br><a href='https://surl.amap.com/blTT6F4CdoW' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍵</span>龙庭有里港式茶餐厅(向西雍睦豪庭店)</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 60</span><span class='badge'>DONGMEN E LOUHOU</span></div><div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cucina Hong Kong<br>Prezzo medio: 60 ¥<br>Voto medio: 4.4<br>Indirizzo: LuohuXiangxi Cunyong Muhaoting No.101 (Hubei Subway Station Entrance & Exit D Pedestrian 170 Meters)<br><a href='https://surl.amap.com/bmV38CS1e0ft' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍵</span>Jingjiuchu</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 84</span><span class='badge'>DONGMEN E LOUHOU</span></div><div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cucina pechino<br>Prezzo medio: 84 ¥<br>Voto medio: 4.5<br>Indirizzo: LuohuDongmen South Road No.3018 Tianjun Foreign Trade Shichu Mansion<br><a href='https://surl.amap.com/bms2maK1A7kP' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🔥</span>Longfa Restaurant (Longfa Braised Chicken Pot Xiangxi Head Office)</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 86</span><span class='badge'>DONGMEN E LOUHOU</span></div><div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Scodelle di fuoco<br>Prezzo medio: 86 ¥<br>Voto medio: 4.5<br>Indirizzo: 南湖街道嘉宾路1026-1028号<br><a href='https://surl.amap.com/bmtV0dQ1AfTP' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🔥</span>Ristorante Best Food</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 53</span><span class='badge'>DONGMEN E LOUHOU</span></div><div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Scodelle di fuoco<br>Prezzo medio: 53 ¥<br>Voto medio: 4.5<br>Indirizzo: 向西村地铁站C口步行360米<br><a href='https://surl.amap.com/bofGKwa9gk4' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        
-        <h2>EXTRA</h2>
-        <div class='card'><b><span class='icon'>🍢</span>齐齐哈尔牛闪闪大肉串(翻身店)</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 89</span><span class='badge'>EXTRA</span></div><div class='meta'>Zona: EXTRA<br>Tipo cucina: BBQ<br>Prezzo medio: 89 ¥<br>Voto medio: 4.4<br>Indirizzo: 安乐二街47栋<br><a href='https://surl.amap.com/bqhBdyGD4SZ' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍜</span>Yinji Rice Noodle Roll (Cloud City Shop)</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 21</span><span class='badge'>EXTRA</span></div><div class='meta'>Zona: EXTRA<br>Tipo cucina: Rice noodle<br>Prezzo medio: 21 ¥<br>Voto medio: 4.4<br>Indirizzo: 西丽街道兴科一街18号万科云城<br><a href='https://surl.amap.com/bqDgKcO62as' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        
-        <h2>FUTIAN</h2>
-        <div class='card'><b><span class='icon'>🥟</span>Hongli Village Steamed Vermicelli Roll (Caihong Store)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 22</span><span class='badge'>FUTIAN</span></div><div class='meta'>Zona: FUTIAN<br>Tipo cucina: Carne, involtini, ravioli<br>Prezzo medio: 22 ¥<br>Voto medio: 4.6<br>Indirizzo: 彩田路3002-2号好百年家居1层<br><a href='https://surl.amap.com/bj5d4DUtg5C' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍣</span>Sushiro (Zhuoyue Zhongxindian)</b><div class='badges'><span class='badge'>★ 4.8</span><span class='badge'>¥ 110</span><span class='badge'>FUTIAN</span></div><div class='meta'>Zona: FUTIAN<br>Tipo cucina: Sushi<br>Prezzo medio: 110 ¥<br>Voto medio: 4.8<br>Indirizzo: FutianFuhua 1st Road No.348 Zhuoyue Center Western District B2 (B229)<br><a href='https://surl.amap.com/biCY7QK102tG' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍵</span>Jinhuangting Restaurant</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 105</span><span class='badge'>FUTIAN</span></div><div class='meta'>Zona: FUTIAN<br>Tipo cucina: Cantonese buono<br>Prezzo medio: 105 ¥<br>Voto medio: 4.6<br>Indirizzo: 金田路3037号5楼<br><a href='https://surl.amap.com/bibfUc2t7SU' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        
-        <h2>HUAQINGBEI</h2>
-        <div class='card'><b><span class='icon'>🍜</span>永记首家刺瓜肠粉(田面村总店)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 34</span><span class='badge'>HUAQINGBEI</span></div><div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: Cose strane<br>Prezzo medio: 34 ¥<br>Voto medio: 4.6<br>Indirizzo: 振华西路田面新村5-102号<br><a href='https://surl.amap.com/4jxVaLIR1DY' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍵</span>Fanlou (Negozio Principale di Huaqiangbei)</b><div class='badges'><span class='badge'>★ 4.8</span><span class='badge'>¥ 88</span><span class='badge'>HUAQINGBEI</span></div><div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: Cantonese<br>Prezzo medio: 88 ¥<br>Voto medio: 4.8<br>Indirizzo: 振华路118号(华强北地铁站C口旁)<br><a href='https://surl.amap.com/bjhx9aG166T9' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍚</span>Huaji Clay Pot Hua (Huaqiang Beimao Ye World Branch)</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 35</span><span class='badge'>HUAQINGBEI</span></div><div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: Riso<br>Prezzo medio: 35 ¥<br>Voto medio: 4.4<br>Indirizzo: FutianNo.2009, Huaqiang North Road Dongfang Times Plaza - Fu Floor 1 B01 No.009X<br><a href='https://surl.amap.com/bjNJ8tkQgqi' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🥟</span>Ziwu Road Zhangji (Huaqiang North Branch)</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 29</span><span class='badge'>HUAQINGBEI</span></div><div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: MO<br>Prezzo medio: 29 ¥<br>Voto medio: 4.5<br>Indirizzo: 华强北华发大厦41-2(华强北地铁站B口步行420米)<br><a href='https://surl.amap.com/bkyUW3w177zb' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍵</span>Fenghuang Building (Huaqiang North Branch)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 151</span><span class='badge'>HUAQINGBEI</span></div><div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: Banchetto cantonese, do it for the plot<br>Prezzo medio: 151 ¥<br>Voto medio: 4.7<br>Indirizzo: 红荔路2012号(华新地铁站C口步行110米)<br><a href='https://surl.amap.com/bk7pIQO1edEV' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍚</span>Riso Fritto Apao Hongyang</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 29</span><span class='badge'>HUAQINGBEI</span></div><div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: Riso in qualsiasi modo<br>Prezzo medio: 29 ¥<br>Voto medio: 4.4<br>Indirizzo: 赤尾村二坊一栋一号(赤尾地铁站C口步行280米)<br><a href='https://surl.amap.com/bl9sIIW1lfzc' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        
-        <h2>NANSHAN</h2>
-        <div class='card'><b><span class='icon'>🍜</span>Xinqiang Jitang Rice Noodle Restaurant</b><div class='badges'><span class='badge'>★ 4.0</span><span class='badge'>¥ 10</span><span class='badge'>NANSHAN</span></div><div class='meta'>Zona: NANSHAN<br>Tipo cucina: Noodle di riso<br>Prezzo medio: 10 ¥<br>Voto medio: 4.0<br>Indirizzo: NanshanQianhai Road No.1108-1 Xinqiang Jitang Rice Noodle Restaurant<br><a href='https://surl.amap.com/bpbZW2m1fekW' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍜</span>Guanzhong Yuan Shaanxi Noodle Restaurant (Software Base Branch)</b><div class='badges'><span class='badge'>★ 4.3</span><span class='badge'>¥ 27</span><span class='badge'>NANSHAN</span></div><div class='meta'>Zona: NANSHAN<br>Tipo cucina: Noodle - involtini - carne - Mo<br>Prezzo medio: 27 ¥<br>Voto medio: 4.3<br>Indirizzo: NanshanXuefu Road Software Industrial Base Haitian 2nd Road 5 F C1<br><a href='https://surl.amap.com/bqsJRxo45XO' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🦆</span>Xiaofuli Guang Fubaotang Wa Gangshaola</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 92</span><span class='badge'>NANSHAN</span></div><div class='meta'>Zona: NANSHAN<br>Tipo cucina: Anatra e speghetti<br>Prezzo medio: 92 ¥<br>Voto medio: 4.5<br>Indirizzo: NanshanYuehai Residential District Hi-tech Zone Community Keji South 8th Road No.51 Gaoxin Garden Southern District 1 Dongsan Unit L117-L212-L213<br><a href='https://surl.amap.com/boJGn5go4ab' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🌶️</span>Casa Taoxi</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 57</span><span class='badge'>NANSHAN</span></div><div class='meta'>Zona: NANSHAN<br>Tipo cucina: Cucina Hunan un pò piccante<br>Prezzo medio: 57 ¥<br>Voto medio: 4.4<br>Indirizzo: NanshanZhongshan South Street No.74 101<br><a href='nan' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        
-        <h2>VICINO PET CAFÉ</h2>
-        <div class='card'><b><span class='icon'>🍜</span>老味道粉面店</b><div class='badges'><span class='badge'>VICINO PET CAFÉ</span></div><div class='meta'>Zona: VICINO PET CAFÉ<br>Tipo cucina: Noodles<br>Indirizzo: 八卦九街30栋108(红岭北地铁站B口步行290米)<br><a href='https://surl.amap.com/bopi9bQ1sd7R' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍜</span>八大怪自助面馆(八卦岭宿舍区店)</b><div class='badges'><span class='badge'>VICINO PET CAFÉ</span></div><div class='meta'>Zona: VICINO PET CAFÉ<br>Tipo cucina: Noodles self service<br>Indirizzo: 八卦食街八卦三路109号<br><a href='https://surl.amap.com/boWIV9M1h5yw' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        
-        <h2>VICINO ROBOT</h2>
-        <div class='card'><b><span class='icon'>🍜</span>Xuexiang Chu Northeastern Chinese Food (Minle Branch)</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 55</span><span class='badge'>VICINO ROBOT</span></div><div class='meta'>Zona: VICINO ROBOT<br>Tipo cucina: Cibo strano ma interessante<br>Prezzo medio: 55 ¥<br>Voto medio: 4.4<br>Indirizzo: Minzhi Minle Cuiyuan Block 8 8 Pu A1<br><a href='https://surl.amap.com/bnz0OEq1q6wq' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-        <div class='card'><b><span class='icon'>🍜</span>廖發發平价茶档小吃集市</b><div class='badges'><span class='badge'>VICINO ROBOT</span></div><div class='meta'>Zona: VICINO ROBOT<br>Tipo cucina: ristorante chiosco con un botto di roba economica<br>Indirizzo: 樟坑1区东南10门西北230米<br><a href='https://surl.amap.com/bpyqSkyrgJx' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-    </section>
-
-    <!-- CANTON (42 ristoranti) -->
-    <section id='city-canton' class='hidden'>
-        <div class='city-titlebar'>
-            <button class='backToHome btn'>← Città</button>
-            <h1>Canton (Guangzhou) <small>· guida locale</small></h1>
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Daoxiang (East Gate Centre City Shop)</b>
+            <div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cantonese<br>Prezzo medio: 13 ¥<br>Voto medio: 4.6<br>Indirizzo: 东门中路号东门中心城层3F<br>Link Amap: <a href='https://surl.amap.com/bmKP8C619413' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 13</span><span class='badge'>DONGMEN E LOUHOU</span></div>
         </div>
         
+        <div class='card'>
+            <b><span class='icon'>🌶️</span>Benluobo Liuyang Restaurant (Luohu Branch)</b>
+            <div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cucina Hunan piccantina<br>Prezzo medio: 67 ¥<br>Voto medio: 4.9<br>Indirizzo: Luohu3002, Jiefang Road No. Shenzhen Wenheyou F F3<br>Link Amap: <a href='https://surl.amap.com/bmiTUvo1kgaz' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.9</span><span class='badge'>¥ 67</span><span class='badge'>DONGMEN E LOUHOU</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>珧记饭店</b>
+            <div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cantonese<br>Indirizzo: —<br>Link Amap: <a href='https://surl.amap.com/dC95vNQPfOO' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>DONGMEN E LOUHOU</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Chu Xiang Lou · Ristorante di Dim Sum Cantonese</b>
+            <div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cantonese<br>Prezzo medio: 78 ¥<br>Voto medio: 4.7<br>Indirizzo: 人民南路3009-7号储香楼<br>Link Amap: <a href='https://surl.amap.com/bmmsCauTdds' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 78</span><span class='badge'>DONGMEN E LOUHOU</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍢</span>Fenghao Barbecue Yueshi Snack Booth (International Trade Huijin Tianlang Shop)</b>
+            <div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: BBQ + spaghetti<br>Prezzo medio: 92 ¥<br>Voto medio: 4.4<br>Indirizzo: 汇金天琅大厦(国贸地铁站B口步行460米)<br>Link Amap: <a href='https://surl.amap.com/blTT6F4CdoW' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 92</span><span class='badge'>DONGMEN E LOUHOU</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>龙庭有里港式茶餐厅(向西雍睦豪庭店)</b>
+            <div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cucina Hong Kong<br>Prezzo medio: 60 ¥<br>Voto medio: 4.4<br>Indirizzo: LuohuXiangxi Cunyong Muhaoting No.101 (Hubei Subway Station Entrance &amp; Exit D Pedestrian 170 Meters)<br>Link Amap: <a href='https://surl.amap.com/bmV38CS1e0ft' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 60</span><span class='badge'>DONGMEN E LOUHOU</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Jingjiuchu</b>
+            <div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Cucina pechino<br>Prezzo medio: 84 ¥<br>Voto medio: 4.5<br>Indirizzo: LuohuDongmen South Road No.3018 Tianjun Foreign Trade Shichu Mansion<br>Link Amap: <a href='https://surl.amap.com/bms2maK1A7kP' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 84</span><span class='badge'>DONGMEN E LOUHOU</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Longfa Restaurant (Longfa Braised Chicken Pot Xiangxi Head Office)</b>
+            <div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Scodelle di fuoco<br>Prezzo medio: 86 ¥<br>Voto medio: 4.5<br>Indirizzo: 南湖街道嘉宾路1026-1028号<br>Link Amap: <a href='https://surl.amap.com/bmtV0dQ1AfTP' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 86</span><span class='badge'>DONGMEN E LOUHOU</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Ristorante Best Food</b>
+            <div class='meta'>Zona: DONGMEN E LOUHOU<br>Tipo cucina: Scodelle di fuoco<br>Prezzo medio: 53 ¥<br>Voto medio: 4.5<br>Indirizzo: 向西村地铁站C口步行360米<br>Link Amap: <a href='https://surl.amap.com/bofGKwa9gk4' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 53</span><span class='badge'>DONGMEN E LOUHOU</span></div>
+        </div>
+        
+        <h2>EXTRA</h2>
+        <div class='card'>
+            <b><span class='icon'>🍢</span>齐齐哈尔牛闪闪大肉串(翻身店)</b>
+            <div class='meta'>Zona: EXTRA<br>Tipo cucina: BBQ<br>Prezzo medio: 89 ¥<br>Voto medio: 4.4<br>Indirizzo: 安乐二街47栋<br>Link Amap: <a href='https://surl.amap.com/bqhBdyGD4SZ' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 89</span><span class='badge'>EXTRA</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Yinji Rice Noodle Roll (Cloud City Shop)</b>
+            <div class='meta'>Zona: EXTRA<br>Tipo cucina: Rice noodle<br>Prezzo medio: 21 ¥<br>Voto medio: 4.4<br>Indirizzo: 西丽街道兴科一街18号万科云城<br>Link Amap: <a href='https://surl.amap.com/bqDgKcO62as' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 21</span><span class='badge'>EXTRA</span></div>
+        </div>
+        
+        <h2>FUTIAN</h2>
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Hongli Village Steamed Vermicelli Roll (Caihong Store)</b>
+            <div class='meta'>Zona: FUTIAN<br>Tipo cucina: Carne, involtini, ravioli<br>Prezzo medio: 22 ¥<br>Voto medio: 4.6<br>Indirizzo: 彩田路3002-2号好百年家居1层<br>Link Amap: <a href='https://surl.amap.com/bj5d4DUtg5C' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 22</span><span class='badge'>FUTIAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍣</span>Sushiro (Zhuoyue Zhongxindian)</b>
+            <div class='meta'>Zona: FUTIAN<br>Tipo cucina: Sushi<br>Prezzo medio: 110 ¥<br>Voto medio: 4.8<br>Indirizzo: FutianFuhua 1st Road No.348 Zhuoyue Center Western District B2 (B229)<br>Link Amap: <a href='https://surl.amap.com/biCY7QK102tG' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.8</span><span class='badge'>¥ 110</span><span class='badge'>FUTIAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Jinhuangting Restaurant</b>
+            <div class='meta'>Zona: FUTIAN<br>Tipo cucina: Cantonese buono<br>Prezzo medio: 105 ¥<br>Voto medio: 4.6<br>Indirizzo: 金田路3037号5楼<br>Link Amap: <a href='https://surl.amap.com/bibfUc2t7SU' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 105</span><span class='badge'>FUTIAN</span></div>
+        </div>
+        
+        <h2>HUAQINGBEI</h2>
+        <div class='card'>
+            <b><span class='icon'>🍜</span>永记首家刺瓜肠粉(田面村总店)</b>
+            <div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: Cose strane<br>Prezzo medio: 34 ¥<br>Voto medio: 4.6<br>Indirizzo: 振华西路田面新村5-102号<br>Link Amap: <a href='https://surl.amap.com/4jxVaLIR1DY' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 34</span><span class='badge'>HUAQINGBEI</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Fanlou (Negozio Principale di Huaqiangbei)</b>
+            <div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: Cantonese<br>Prezzo medio: 88 ¥<br>Voto medio: 4.8<br>Indirizzo: 振华路118号(华强北地铁站C口旁)<br>Link Amap: <a href='https://surl.amap.com/bjhx9aG166T9' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.8</span><span class='badge'>¥ 88</span><span class='badge'>HUAQINGBEI</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍚</span>Huaji Clay Pot Hua (Huaqiang Beimao Ye World Branch)</b>
+            <div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: Riso<br>Prezzo medio: 35 ¥<br>Voto medio: 4.4<br>Indirizzo: FutianNo.2009, Huaqiang North Road Dongfang Times Plaza - Fu Floor 1 B01 No.009X<br>Link Amap: <a href='https://surl.amap.com/bjNJ8tkQgqi' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 35</span><span class='badge'>HUAQINGBEI</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Ziwu Road Zhangji (Huaqiang North Branch)</b>
+            <div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: MO<br>Prezzo medio: 29 ¥<br>Voto medio: 4.5<br>Indirizzo: 华强北华发大厦41-2(华强北地铁站B口步行420米)<br>Link Amap: <a href='https://surl.amap.com/bkyUW3w177zb' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 29</span><span class='badge'>HUAQINGBEI</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Fenghuang Building (Huaqiang North Branch)</b>
+            <div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: Banchetto cantonese, do it for the plot<br>Prezzo medio: 151 ¥<br>Voto medio: 4.7<br>Indirizzo: 红荔路2012号(华新地铁站C口步行110米)<br>Link Amap: <a href='https://surl.amap.com/bk7pIQO1edEV' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 151</span><span class='badge'>HUAQINGBEI</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍚</span>Riso Fritto Apao Hongyang</b>
+            <div class='meta'>Zona: HUAQINGBEI<br>Tipo cucina: Riso in qualsiasi modo<br>Prezzo medio: 29 ¥<br>Voto medio: 4.4<br>Indirizzo: 赤尾村二坊一栋一号(赤尾地铁站C口步行280米)<br>Link Amap: <a href='https://surl.amap.com/bl9sIIW1lfzc' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 29</span><span class='badge'>HUAQINGBEI</span></div>
+        </div>
+        
+        <h2>NANSHAN</h2>
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Xinqiang Jitang Rice Noodle Restaurant</b>
+            <div class='meta'>Zona: NANSHAN<br>Tipo cucina: Noodle di riso<br>Prezzo medio: 10 ¥<br>Voto medio: 4.0<br>Indirizzo: NanshanQianhai Road No.1108-1 Xinqiang Jitang Rice Noodle Restaurant<br>Link Amap: <a href='https://surl.amap.com/bpbZW2m1fekW' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.0</span><span class='badge'>¥ 10</span><span class='badge'>NANSHAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Guanzhong Yuan Shaanxi Noodle Restaurant (Software Base Branch)</b>
+            <div class='meta'>Zona: NANSHAN<br>Tipo cucina: Noodle - involtini - carne - Mo<br>Prezzo medio: 27 ¥<br>Voto medio: 4.3<br>Indirizzo: NanshanXuefu Road Software Industrial Base Haitian 2nd Road 5 F C1<br>Link Amap: <a href='https://surl.amap.com/bqsJRxo45XO' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.3</span><span class='badge'>¥ 27</span><span class='badge'>NANSHAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🦆</span>Xiaofuli Guang Fubaotang Wa Gangshaola</b>
+            <div class='meta'>Zona: NANSHAN<br>Tipo cucina: Anatra e speghetti<br>Prezzo medio: 92 ¥<br>Voto medio: 4.5<br>Indirizzo: NanshanYuehai Residential District Hi-tech Zone Community Keji South 8th Road No.51 Gaoxin Garden Southern District 1 Dongsan Unit L117-L212-L213<br>Link Amap: <a href='https://surl.amap.com/boJGn5go4ab' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 92</span><span class='badge'>NANSHAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🌶️</span>Casa Taoxi</b>
+            <div class='meta'>Zona: NANSHAN<br>Tipo cucina: Cucina Hunan un pò piccante<br>Prezzo medio: 57 ¥<br>Voto medio: 4.4<br>Indirizzo: NanshanZhongshan South Street No.74 101<br>Link Amap: <a href='nan' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 57</span><span class='badge'>NANSHAN</span></div>
+        </div>
+        
+        <h2>VICINO PET CAFÉ</h2>
+        <div class='card'>
+            <b><span class='icon'>🍜</span>老味道粉面店</b>
+            <div class='meta'>Zona: VICINO PET CAFÉ<br>Tipo cucina: Noodles<br>Indirizzo: 八卦九街30栋108(红岭北地铁站B口步行290米)<br>Link Amap: <a href='https://surl.amap.com/bopi9bQ1sd7R' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>VICINO PET CAFÉ</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>八大怪自助面馆(八卦岭宿舍区店)</b>
+            <div class='meta'>Zona: VICINO PET CAFÉ<br>Tipo cucina: Noodles self service<br>Indirizzo: 八卦食街八卦三路109号<br>Link Amap: <a href='https://surl.amap.com/boWIV9M1h5yw' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>VICINO PET CAFÉ</span></div>
+        </div>
+        
+        <h2>VICINO ROBOT</h2>
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Xuexiang Chu Northeastern Chinese Food (Minle Branch)</b>
+            <div class='meta'>Zona: VICINO ROBOT<br>Tipo cucina: Cibo strano ma interessante<br>Prezzo medio: 55 ¥<br>Voto medio: 4.4<br>Indirizzo: Minzhi Minle Cuiyuan Block 8 8 Pu A1<br>Link Amap: <a href='https://surl.amap.com/bnz0OEq1q6wq' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 55</span><span class='badge'>VICINO ROBOT</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>廖發發平价茶档小吃集市</b>
+            <div class='meta'>Zona: VICINO ROBOT<br>Tipo cucina: ristorante chiosco con un botto di roba economica<br>Indirizzo: 樟坑1区东南10门西北230米<br>Link Amap: <a href='https://surl.amap.com/bpyqSkyrgJx' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>VICINO ROBOT</span></div>
+        </div>
+    </section>
+
+    <!-- Canton Section -->
+    <section id='city-canton' class='city-wrap hidden'>
+        <div class='city-titlebar'>
+            <button class='backToHome btn' title='Torna alla selezione'>← Città</button>
+            <h1>Canton (Guangzhou) <small>· guida locale</small></h1>
+        </div>
         <div class='controls'>
             <div class='row'>
                 <input id='search-canton' placeholder='Cerca in Canton...'>
             </div>
         </div>
-        
         <div class='favorites'>
             <h2>Preferiti <button class='btn' id='clearFavs-canton' style='margin-left:auto'>Svuota</button></h2>
             <div class='list'></div>
         </div>
-        
         <h1>Canton — Lista Finale (42)</h1>
         
         <h2>BEIJING ROAD</h2>
-        <div class='card'><b><span class='icon'>🍵</span>Diandude (Beijing Road Er Shop)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 73</span><span class='badge'>BEIJING ROAD</span></div><div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Ristorante gettonato di cibo cantonese<br>Prezzo medio: 73 ¥<br>Voto medio: 4.7<br>Indirizzo: YuexiuBeijing Road No.352, 354<br><a href='https://surl.amap.com/40tG9oGF1qceq' target='_blank' class='mapbtn'>Apr'><span class='badge'>★ 4.7</span><span class='badge'>¥ 38</span><span class
-        <div class='card'><b><span class='icon'>🍜</span>Cucina Casareccia del Nordest di Ma (Piazza Baihui)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 38</span><span class='badge'>BEIJING ROAD</span></div><div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Piatti tipici cinesi<br>Prezzo medio: 38 ¥<br>Voto medio: 4.7<br>Indirizzo: 大丰窝美食广场(百汇广场店)(公园前地铁站B2口旁)<br><a href='https://surl.amap.com/aUsqM2m1a66q' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍵</span>Boyou Chaji Dietoufan (Beijing Road Branch)</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 34</span><span class='badge'>BEIJING ROAD</span></div><div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Cibo cantonese schimico<br>Prezzo medio: 34 ¥<br>Voto medio: 4.5<br>Indirizzo: YuexiuBeijing Road Xihu Road Liushuijing No.17<br><a href='https://surl.amap.com/aUuq8jU1zd8P' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Yinji Rice Noodle Roll (Beijing Road Branch)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 23</span><span class='badge'>BEIJING ROAD</span></div><div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Roll di riso<br>Prezzo medio: 23 ¥<br>Voto medio: 4.6<br>Indirizzo: 惠福东路519号(北京路地铁站B口步行490米)<br><a href='https://surl.amap.com/2YuRcYqg68g' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Liyin Steamed Vermicelli Roll (Danan Road Branch)</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 25</span><span class='badge'>BEIJING ROAD</span></div><div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Roll di riso<br>Prezzo medio: 25 ¥<br>Voto medio: 4.4<br>Indirizzo: 大南路191号(北京路地铁站B口步行330米)<br><a href='https://surl.amap.com/aU5UNzk8fox' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍵</span>Yidiandian (Wenming Road Branch)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 18</span><span class='badge'>BEIJING ROAD</span></div><div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Bubble tea<br>Prezzo medio: 18 ¥<br>Voto medio: 4.6<br>Indirizzo: 文明路10号宝升商业大厦1层12号<br><a href='https://surl.amap.com/aV7LD1g95BK' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>D Dadan Baochao Luosifen (Beijing Road Branch)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 27</span><span class='badge'>BEIJING ROAD</span></div><div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Spaghetti di riso<br>Prezzo medio: 27 ¥<br>Voto medio: 4.7<br>Indirizzo: Wanfu Road No.371 (Beijing Road Subway Station Entrance & Exit A1 Pedestrian 170 Meters)<br><a href='https://surl.amap.com/aVaNBxU1mdfa' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍚</span>Wanxing Potted Rice</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 38</span><span class='badge'>BEIJING ROAD</span></div><div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Riso in casseruola<br>Prezzo medio: 38 ¥<br>Voto medio: 4.5<br>Indirizzo: 万福路287-289号(近文德路)<br><a href='https://surl.amap.com/aVcwbfkpa5T' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Lide Noodle Restaurant (Zhuguang Branch)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 37</span><span class='badge'>BEIJING ROAD</span></div><div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Noodle, wonton, anatra<br>Prezzo medio: 37 ¥<br>Voto medio: 4.6<br>Indirizzo: YuexiuWende South Road No.62 Zhuguang Market F1 106<br><a href='https://surl.amap.com/aWHRaaCB2hZ' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Ristorante Xingyuan (Aperto)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 85</span><span class='badge'>BEIJING ROAD</span></div><div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Misto di piatti normali e hardcore<br>Prezzo medio: 85 ¥<br>Voto medio: 4.6<br>Indirizzo: 南堤二码路太平通津1号<br><a href='https://surl.amap.com/aVJKMN41ocj5' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Casa di Ravioli Halal Tao Fei Ge</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 26</span><span class='badge'>BEIJING ROAD</span></div><div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Ravioli<br>Prezzo medio: 26 ¥<br>Voto medio: 4.4<br>Indirizzo: 光塔路33-1号<br><a href='https://surl.amap.com/aXxF7GOO4I3' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-
-<h2>EXTRA</h2>
-<div class='card'><b><span class='icon'>🥟</span>Buhuo Dumplings (Tangdong Branch)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 19</span><span class='badge'>EXTRA</span></div><div class='meta'>Zona: EXTRA<br>Tipo cucina: Ravioli<br>Prezzo medio: 19 ¥<br>Voto medio: 4.6<br>Indirizzo: 棠下街道棠德南路109号<br><a href='https://surl.amap.com/bbEd2h4Z3qr' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Xiaomai Xiangshou Damian</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 18</span><span class='badge'>EXTRA</span></div><div class='meta'>Zona: EXTRA<br>Tipo cucina: Noodle<br>Prezzo medio: 18 ¥<br>Voto medio: 4.4<br>Indirizzo: BaiyunJingxi Fuqiang East Street and Jingxi East Street Intersection North 20 Meters<br><a href='https://surl.amap.com/bdoQI8yjbpC' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍵</span>Ristorante di Cucina Luhou Shanwei</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 17</span><span class='badge'>EXTRA</span></div><div class='meta'>Zona: EXTRA<br>Tipo cucina: Cucina di Chaozu (vapore)<br>Prezzo medio: 17 ¥<br>Voto medio: 4.5<br>Indirizzo: 龙洞聚贤小区一巷5号101<br><a href='https://surl.amap.com/bdUl3Vg1jaPW' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Leduo Li Gourmet (Negozio del Dormitorio della Fabbrica di Pianoforti)</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 26</span><span class='badge'>EXTRA</span></div><div class='meta'>Zona: EXTRA<br>Tipo cucina: Spaghetti e ravioli<br>Prezzo medio: 26 ¥<br>Voto medio: 4.5<br>Indirizzo: 镇南大街1-7号<br><a href='https://surl.amap.com/bdcMAa6aa2i' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍵</span>Ristorante Nanyuan</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 105</span><span class='badge'>EXTRA</span></div><div class='meta'>Zona: EXTRA<br>Tipo cucina: Cantonese carino<br>Prezzo medio: 105 ¥<br>Voto medio: 4.7<br>Indirizzo: 前进路142号<br><a href='https://surl.amap.com/beYzaue129mf' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-
-<h2>LIWAN</h2>
-<div class='card'><b><span class='icon'>🦆</span>Carne Arrosto Yung Hing</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 76</span><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Anatra asporto<br>Prezzo medio: 76 ¥<br>Voto medio: 4.6<br>Indirizzo: 梯云东路21-4号(文化公园地铁站E口步行450米)<br><a href='https://surl.amap.com/b5RdtuySewX' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍵</span>Jin Jiu Da Pai Dang (Negozio Kangwang)</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 83</span><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Cucina cantonese<br>Prezzo medio: 83 ¥<br>Voto medio: 4.5<br>Indirizzo: 康王中路惠城花园门前第三地块<br><a href='https://surl.amap.com/b4TOjC2AcOd' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>诚成煎饺(陈家祠地铁站店)</b><div class='badges'><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Ravioli che sembrano molto buoni<br>Indirizzo: 荔湾区中山七路1906科技园扬韬广场5号楼一层04号铺(陈家祠地铁站A出口步行200米)<br><a href='https://surl.amap.com/8Wcf8muL5n6' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍵</span>Ristorante New Lido (Via Wenchang Sud)</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 66</span><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Cantonese<br>Prezzo medio: 66 ¥<br>Voto medio: 4.5<br>Indirizzo: 文昌南路83-1首层<br><a href='https://surl.amap.com/b4YzhR016gXT' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🦆</span>Huaqiang Traditional Brand Liwan Yuelihao</b><div class='badges'><span class='badge'>★ 3.9</span><span class='badge'>¥ 43</span><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Anatra asporto<br>Prezzo medio: 43 ¥<br>Voto medio: 3.9<br>Indirizzo: 宝华市场宝华正中约7-4<br><a href='https://surl.amap.com/b5ZToau173YB' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Wu Cai Ji</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 28</span><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Noodles strani<br>Prezzo medio: 28 ¥<br>Voto medio: 4.6<br>Indirizzo: LiwanDatong Road Helongli No.20 (Jian Datong Road No.84 Beside Alley Jinru 50 Meters)<br><a href='https://surl.amap.com/b41LThMq4Ra' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍵</span>Guanlvcha Ju (Zhongshan 8th Road Subway Station Branch)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 53</span><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Cantonese strano<br>Prezzo medio: 53 ¥<br>Voto medio: 4.6<br>Indirizzo: Fuli Business & Trade Mansion, No.23, Zhongshan 8th Road Floor 2 (Zhongshan 8th Road Subway Station Exit A Pedestrian 677 Meters)<br><a href='https://surl.amap.com/b69DB9810mx' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍵</span>Fengxiaoguan Shundecai (Yongqingfang Shop)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 87</span><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Cantonese un pò fancy<br>Prezzo medio: 87 ¥<br>Voto medio: 4.6<br>Indirizzo: Enning Road Yongqing Fang'er Qi'antu Street No.46<br><a href='https://surl.amap.com/b7WVKIG1o9Ik' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍺</span>Helen's Bistro (Guangzhou Yongqingfang Branch)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 83</span><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Bar<br>Prezzo medio: 83 ¥<br>Voto medio: 4.6<br>Indirizzo: Enning Road Yongqing Fangzhong Alley No.8 Building 3 (Taiheng Icehouse Beside Elevator Building 3)<br><a href='https://surl.amap.com/b8Yh74S1p07f' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍵</span>Ristorante Guangzhou · Banchetto Cantonese Xiguan</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 98</span><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Cantonese in un posto carino<br>Prezzo medio: 98 ¥<br>Voto medio: 4.7<br>Indirizzo: Liwan104, Longjin West Road No.<br><a href='https://surl.amap.com/b71xDbkn1x0' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍺</span>Youjiu Pub</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 69</span><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Bar<br>Prezzo medio: 69 ¥<br>Voto medio: 4.4<br>Indirizzo: 宝源路三号<br><a href='https://surl.amap.com/b7wQeyK1talL' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Bazhen Jianjiao (Yongqingfang Shop)</b><div class='badges'><span class='badge'>★ 4.1</span><span class='badge'>¥ 25</span><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Ravioli e snack<br>Prezzo medio: 25 ¥<br>Voto medio: 4.1<br>Indirizzo: 恩宁路75号永庆食集<br><a href='https://surl.amap.com/b95XLCWa9Hs' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍺</span>ANDMORE</b><div class='badges'><span class='badge'>LIWAN</span></div><div class='meta'>Zona: LIWAN<br>Tipo cucina: Bar<br>Indirizzo: 昌华街道泮塘五约外街76号<br><a href='https://surl.amap.com/b7DiwsqydSR' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-
-<h2>XINHUA RD</h2>
-<div class='card'><b><span class='icon'>🍵</span>Yuji Zhoudang (Longjin Building Shop)</b><div class='badges'><span class='badge'>XINHUA RD</span></div><div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Cinese regionale<br>Indirizzo: Liwan Road No.97 Courtyard Zibianhao Building 15 F1 Pu A1 (Donggan Xiaoxiguan YES Cinema Beside)<br><a href='https://surl.amap.com/b9PoTrc1o0gy' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍣</span>Gelinduo (Liwan Branch)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 11</span><span class='badge'>XINHUA RD</span></div><div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Sandwich tipo giappo<br>Prezzo medio: 11 ¥<br>Voto medio: 4.7<br>Indirizzo: YuexiuXihua Road No.223-4 (Caihongqiao Subway Station Entrance & Exit A Pedestrian 310 Meters)<br><a href='https://surl.amap.com/bb8GaoWHabC' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍢</span>Spiedini di filetto di maiale alla Tiziano</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 22</span><span class='badge'>XINHUA RD</span></div><div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Spiedini di maiale<br>Prezzo medio: 22 ¥<br>Voto medio: 4.5<br>Indirizzo: Xihua Road No.231<br><a href='https://surl.amap.com/im3XfzkIe3Y' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Fangji Snack Shop (Health King. Best Come Mall Shop)</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 13</span><span class='badge'>XINHUA RD</span></div><div class='meta'>Zona: XINHUA RD<br>Tipo cucina: nan<br>Prezzo medio: 13 ¥<br>Voto medio: 4.5<br>Indirizzo: 金花街道西华路280号(82中对面)<br><a href='https://surl.amap.com/b9tuGhsj9Uo' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍰</span>碌碌转制饼社车轮饼(西华路店)</b><div class='badges'><span class='badge'>★ 4.2</span><span class='badge'>¥ 7</span><span class='badge'>XINHUA RD</span></div><div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Dolcetti<br>Prezzo medio: 7 ¥<br>Voto medio: 4.2<br>Indirizzo: 西华路241号之1号<br><a href='https://surl.amap.com/ikMByL01k6eH' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍰</span>Frittelle Fritte Tengyuan</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 12</span><span class='badge'>XINHUA RD</span></div><div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Frittelle cinesi<br>Prezzo medio: 12 ¥<br>Voto medio: 4.6<br>Indirizzo: YuexiuXihua Road No.439<br><a href='???????' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Chengcheng Jianjiao (Xihua Road Branch)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 25</span><span class='badge'>XINHUA RD</span></div><div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Ravioli<br>Prezzo medio: 25 ¥<br>Voto medio: 4.6<br>Indirizzo: LiwanXihua Road No.464 Nanhai Middle School Junior High School Bupang<br><a href='https://surl.amap.com/baKDmDMQdS2' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Cucina Sanhe</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 19</span><span class='badge'>XINHUA RD</span></div><div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Cinese misto<br>Prezzo medio: 19 ¥<br>Voto medio: 4.5<br>Indirizzo: 西华路484号<br><a href='https://surl.amap.com/bciE5jQ139Pf' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-
-<h2>ZHUJIANG NEW TOWN</h2>
-<div class='card'><b><span class='icon'>🥟</span>Negozio di Dumplings Jurong</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 23</span><span class='badge'>ZHUJIANG NEW TOWN</span></div><div class='meta'>Zona: ZHUJIANG NEW TOWN<br>Tipo cucina: Ravioli<br>Prezzo medio: 23 ¥<br>Voto medio: 4.6<br>Indirizzo: 寺右二马路与寺右新马路交叉口南侧4号档铺(近五羊中学)<br><a href='https://surl.amap.com/bcrrYgW14ll' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍣</span>寿司郎(花城汇南区店)</b><div class='badges'><span class='badge'>ZHUJIANG NEW TOWN</span></div><div class='meta'>Zona: ZHUJIANG NEW TOWN<br>Tipo cucina: Sushiro<br>Indirizzo: 花城大道89号花城汇南区B1层<br><a href='https://surl.amap.com/bcXjOSe184e7' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍚</span>Minji Potted Rice (Tiyu West Branch)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 28</span><span class='badge'>ZHUJIANG NEW TOWN</span></div><div class='meta'>Zona: ZHUJIANG NEW TOWN<br>Tipo cucina: Riso in pentola<br>Prezzo medio: 28 ¥<br>Voto medio: 4.7<br>Indirizzo: 广利路80号(体育西路地铁站G口步行250米)<br><a href='https://surl.amap.com/bavCIkq14e1M' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍵</span>Casa del Tè Lu Yun·Dim Sum Fatti a Mano (Negozio Tiyuxi)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 81</span><span class='badge'>ZHUJIANG NEW TOWN</span></div><div class='meta'>Zona: ZHUJIANG NEW TOWN<br>Tipo cucina: Cantonese<br>Prezzo medio: 81 ¥<br>Voto medio: 4.7<br>Indirizzo: TianheLiuyun 1st Street No.17 Wenchang Business Building F F2 (Liuyun Kindergarten Pangjin Parc Central Plaza)<br><a href='https://surl.amap.com/bbxkJto1ja6e' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🐟</span>Yangcheng Tiefanwan</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 48</span><span class='badge'>ZHUJIANG NEW TOWN</span></div><div class='meta'>Zona: ZHUJIANG NEW TOWN<br>Tipo cucina: Carne pesce cinese<br>Prezzo medio: 48 ¥<br>Voto medio: 4.6<br>Indirizzo: Tianhe South 2nd Road No.6 Zhi San OneLink Walk Back Street<br><a href='https://surl.amap.com/bayN5981x065' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-    </section>
-
-    <!-- CHONGQING (53 ristoranti) -->
-    <section id='city-chongqing' class='hidden'>
-        <div class='city-titlebar'>
-            <button class='backToHome btn'>← Città</button>
-            <h1>Chongqing <small>· guida locale</small></h1>
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Diandude (Beijing Road Er Shop)</b>
+            <div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Ristorante gettonato di cibo cantonese<br>Prezzo medio: 73 ¥<br>Voto medio: 4.7<br>Indirizzo: YuexiuBeijing Road No.352, 354<br>Link Amap: <a href='https://surl.amap.com/40tG9oGF1qceq' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 73</span><span class='badge'>BEIJING ROAD</span></div>
         </div>
         
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Cucina Casareccia del Nordest di Ma (Piazza Baihui)</b>
+            <div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Piatti tipici cinesi<br>Prezzo medio: 38 ¥<br>Voto medio: 4.7<br>Indirizzo: 大丰窝美食广场(百汇广场店)(公园前地铁站B2口旁)<br>Link Amap: <a href='https://surl.amap.com/aUsqM2m1a66q' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 38</span><span class='badge'>BEIJING ROAD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Boyou Chaji Dietoufan (Beijing Road Branch)</b>
+            <div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Cibo cantonese schimico<br>Prezzo medio: 34 ¥<br>Voto medio: 4.5<br>Indirizzo: YuexiuBeijing Road Xihu Road Liushuijing No.17<br>Link Amap: <a href='https://surl.amap.com/aUuq8jU1zd8P' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 34</span><span class='badge'>BEIJING ROAD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Yinji Rice Noodle Roll (Beijing Road Branch)</b>
+            <div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Roll di riso<br>Prezzo medio: 23 ¥<br>Voto medio: 4.6<br>Indirizzo: 惠福东路519号(北京路地铁站B口步行490米)<br>Link Amap: <a href='https://surl.amap.com/2YuRcYqg68g' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 23</span><span class='badge'>BEIJING ROAD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Liyin Steamed Vermicelli Roll (Danan Road Branch)</b>
+            <div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Roll di riso<br>Prezzo medio: 25 ¥<br>Voto medio: 4.4<br>Indirizzo: 大南路191号(北京路地铁站B口步行330米)<br>Link Amap: <a href='https://surl.amap.com/aU5UNzk8fox' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 25</span><span class='badge'>BEIJING ROAD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Yidiandian (Wenming Road Branch)</b>
+            <div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Bubble tea<br>Prezzo medio: 18 ¥<br>Voto medio: 4.6<br>Indirizzo: 文明路10号宝升商业大厦1层12号<br>Link Amap: <a href='https://surl.amap.com/aV7LD1g95BK' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 18</span><span class='badge'>BEIJING ROAD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>D Dadan Baochao Luosifen (Beijing Road Branch)</b>
+            <div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Spaghetti di riso<br>Prezzo medio: 27 ¥<br>Voto medio: 4.7<br>Indirizzo: Wanfu Road No.371 (Beijing Road Subway Station Entrance &amp; Exit A1 Pedestrian 170 Meters)<br>Link Amap: <a href='https://surl.amap.com/aVaNBxU1mdfa' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 27</span><span class='badge'>BEIJING ROAD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍚</span>Wanxing Potted Rice</b>
+            <div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Riso in casseruola<br>Prezzo medio: 38 ¥<br>Voto medio: 4.5<br>Indirizzo: 万福路287-289号(近文德路)<br>Link Amap: <a href='https://surl.amap.com/aVcwbfkpa5T' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 38</span><span class='badge'>BEIJING ROAD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Lide Noodle Restaurant (Zhuguang Branch)</b>
+            <div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Noodle, wonton, anatra<br>Prezzo medio: 37 ¥<br>Voto medio: 4.6<br>Indirizzo: YuexiuWende South Road No.62 Zhuguang Market F1 106<br>Link Amap: <a href='https://surl.amap.com/aWHRaaCB2hZ' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 37</span><span class='badge'>BEIJING ROAD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Ristorante Xingyuan (Aperto)</b>
+            <div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Misto di piatti normali e hardcore<br>Prezzo medio: 85 ¥<br>Voto medio: 4.6<br>Indirizzo: 南堤二码路太平通津1号<br>Link Amap: <a href='https://surl.amap.com/aVJKMN41ocj5' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 85</span><span class='badge'>BEIJING ROAD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Casa di Ravioli Halal Tao Fei Ge</b>
+            <div class='meta'>Zona: BEIJING ROAD<br>Tipo cucina: Ravioli<br>Prezzo medio: 26 ¥<br>Voto medio: 4.4<br>Indirizzo: 光塔路33-1号<br>Link Amap: <a href='https://surl.amap.com/aXxF7GOO4I3' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 26</span><span class='badge'>BEIJING ROAD</span></div>
+        </div>
+        
+        <h2>EXTRA</h2>
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Buhuo Dumplings (Tangdong Branch)</b>
+            <div class='meta'>Zona: EXTRA<br>Tipo cucina: Ravioli<br>Prezzo medio: 19 ¥<br>Voto medio: 4.6<br>Indirizzo: 棠下街道棠德南路109号<br>Link Amap: <a href='https://surl.amap.com/bbEd2h4Z3qr' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 19</span><span class='badge'>EXTRA</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Xiaomai Xiangshou Damian</b>
+            <div class='meta'>Zona: EXTRA<br>Tipo cucina: Noodle<br>Prezzo medio: 18 ¥<br>Voto medio: 4.4<br>Indirizzo: BaiyunJingxi Fuqiang East Street and Jingxi East Street Intersection North 20 Meters<br>Link Amap: <a href='https://surl.amap.com/bdoQI8yjbpC' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 18</span><span class='badge'>EXTRA</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Ristorante di Cucina Luhou Shanwei</b>
+            <div class='meta'>Zona: EXTRA<br>Tipo cucina: Cucina di Chaozu (vapore)<br>Prezzo medio: 17 ¥<br>Voto medio: 4.5<br>Indirizzo: 龙洞聚贤小区一巷5号101<br>Link Amap: <a href='https://surl.amap.com/bdUl3Vg1jaPW' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 17</span><span class='badge'>EXTRA</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Leduo Li Gourmet (Negozio del Dormitorio della Fabbrica di Pianoforti)</b>
+            <div class='meta'>Zona: EXTRA<br>Tipo cucina: Spaghetti e ravioli<br>Prezzo medio: 26 ¥<br>Voto medio: 4.5<br>Indirizzo: 镇南大街1-7号<br>Link Amap: <a href='https://surl.amap.com/bdcMAa6aa2i' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 26</span><span class='badge'>EXTRA</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Ristorante Nanyuan</b>
+            <div class='meta'>Zona: EXTRA<br>Tipo cucina: Cantonese carino<br>Prezzo medio: 105 ¥<br>Voto medio: 4.7<br>Indirizzo: 前进路142号<br>Link Amap: <a href='https://surl.amap.com/beYzaue129mf' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 105</span><span class='badge'>EXTRA</span></div>
+        </div>
+        
+        <h2>LIWAN</h2>
+        <div class='card'>
+            <b><span class='icon'>🦆</span>Carne Arrosto Yung Hing</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Anatra asporto<br>Prezzo medio: 76 ¥<br>Voto medio: 4.6<br>Indirizzo: 梯云东路21-4号(文化公园地铁站E口步行450米)<br>Link Amap: <a href='https://surl.amap.com/b5RdtuySewX' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 76</span><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Jin Jiu Da Pai Dang (Negozio Kangwang)</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Cucina cantonese<br>Prezzo medio: 83 ¥<br>Voto medio: 4.5<br>Indirizzo: 康王中路惠城花园门前第三地块<br>Link Amap: <a href='https://surl.amap.com/b4TOjC2AcOd' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 83</span><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>诚成煎饺(陈家祠地铁站店)</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Ravioli che sembrano molto buoni<br>Indirizzo: 荔湾区中山七路1906科技园扬韬广场5号楼一层04号铺(陈家祠地铁站A出口步行200米)<br>Link Amap: <a href='https://surl.amap.com/8Wcf8muL5n6' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Ristorante New Lido (Via Wenchang Sud)</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Cantonese<br>Prezzo medio: 66 ¥<br>Voto medio: 4.5<br>Indirizzo: 文昌南路83-1首层<br>Link Amap: <a href='https://surl.amap.com/b4YzhR016gXT' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 66</span><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🦆</span>Huaqiang Traditional Brand Liwan Yuelihao</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Anatra asporto<br>Prezzo medio: 43 ¥<br>Voto medio: 3.9<br>Indirizzo: 宝华市场宝华正中约7-4<br>Link Amap: <a href='https://surl.amap.com/b5ZToau173YB' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 3.9</span><span class='badge'>¥ 43</span><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Wu Cai Ji</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Noodles strani<br>Prezzo medio: 28 ¥<br>Voto medio: 4.6<br>Indirizzo: LiwanDatong Road Helongli No.20 (Jian Datong Road No.84 Beside Alley Jinru 50 Meters)<br>Link Amap: <a href='https://surl.amap.com/b41LThMq4Ra' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 28</span><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Guanlvcha Ju (Zhongshan 8th Road Subway Station Branch)</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Cantonese strano<br>Prezzo medio: 53 ¥<br>Voto medio: 4.6<br>Indirizzo: Fuli Business &amp; Trade Mansion, No.23, Zhongshan 8th Road Floor 2 (Zhongshan 8th Road Subway Station Exit A Pedestrian 677 Meters)<br>Link Amap: <a href='https://surl.amap.com/b69DB9810mx' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 53</span><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Fengxiaoguan Shundecai (Yongqingfang Shop)</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Cantonese un pò fancy<br>Prezzo medio: 87 ¥<br>Voto medio: 4.6<br>Indirizzo: Enning Road Yongqing Fang&#x27;er Qi&#x27;antu Street No.46<br>Link Amap: <a href='https://surl.amap.com/b7WVKIG1o9Ik' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 87</span><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍺</span>Helen&#x27;s Bistro (Guangzhou Yongqingfang Branch)</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Bar<br>Prezzo medio: 83 ¥<br>Voto medio: 4.6<br>Indirizzo: Enning Road Yongqing Fangzhong Alley No.8 Building 3 (Taiheng Icehouse Beside Elevator Building 3)<br>Link Amap: <a href='https://surl.amap.com/b8Yh74S1p07f' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 83</span><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Ristorante Guangzhou · Banchetto Cantonese Xiguan</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Cantonese in un posto carino<br>Prezzo medio: 98 ¥<br>Voto medio: 4.7<br>Indirizzo: Liwan104, Longjin West Road No.<br>Link Amap: <a href='https://surl.amap.com/b71xDbkn1x0' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 98</span><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍺</span>Youjiu Pub</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Bar<br>Prezzo medio: 69 ¥<br>Voto medio: 4.4<br>Indirizzo: 宝源路三号<br>Link Amap: <a href='https://surl.amap.com/b7wQeyK1talL' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 69</span><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Bazhen Jianjiao (Yongqingfang Shop)</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Ravioli e snack<br>Prezzo medio: 25 ¥<br>Voto medio: 4.1<br>Indirizzo: 恩宁路75号永庆食集<br>Link Amap: <a href='https://surl.amap.com/b95XLCWa9Hs' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.1</span><span class='badge'>¥ 25</span><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍺</span>ANDMORE</b>
+            <div class='meta'>Zona: LIWAN<br>Tipo cucina: Bar<br>Indirizzo: 昌华街道泮塘五约外街76号<br>Link Amap: <a href='https://surl.amap.com/b7DiwsqydSR' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>LIWAN</span></div>
+        </div>
+        
+        <h2>XINHUA RD</h2>
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Yuji Zhoudang (Longjin Building Shop)</b>
+            <div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Cinese regionale<br>Indirizzo: Liwan Road No.97 Courtyard Zibianhao Building 15 F1 Pu A1 (Donggan Xiaoxiguan YES Cinema Beside)<br>Link Amap: <a href='https://surl.amap.com/b9PoTrc1o0gy' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>XINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍣</span>Gelinduo (Liwan Branch)</b>
+            <div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Sandwich tipo giappo<br>Prezzo medio: 11 ¥<br>Voto medio: 4.7<br>Indirizzo: YuexiuXihua Road No.223-4 (Caihongqiao Subway Station Entrance &amp; Exit A Pedestrian 310 Meters)<br>Link Amap: <a href='https://surl.amap.com/bb8GaoWHabC' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 11</span><span class='badge'>XINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍢</span>Spiedini di filetto di maiale alla Tiziano</b>
+            <div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Spiedini di maiale<br>Prezzo medio: 22 ¥<br>Voto medio: 4.5<br>Indirizzo: Xihua Road No.231<br>Link Amap: <a href='https://surl.amap.com/im3XfzkIe3Y' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 22</span><span class='badge'>XINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Fangji Snack Shop (Health King. Best Come Mall Shop)</b>
+            <div class='meta'>Zona: XINHUA RD<br>Tipo cucina: nan<br>Prezzo medio: 13 ¥<br>Voto medio: 4.5<br>Indirizzo: 金花街道西华路280号(82中对面)<br>Link Amap: <a href='https://surl.amap.com/b9tuGhsj9Uo' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 13</span><span class='badge'>XINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍰</span>碌碌转制饼社车轮饼(西华路店)</b>
+            <div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Dolcetti<br>Prezzo medio: 7 ¥<br>Voto medio: 4.2<br>Indirizzo: 西华路241号之1号<br>Link Amap: <a href='https://surl.amap.com/ikMByL01k6eH' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.2</span><span class='badge'>¥ 7</span><span class='badge'>XINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍰</span>Frittelle Fritte Tengyuan</b>
+            <div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Frittelle cinesi<br>Prezzo medio: 12 ¥<br>Voto medio: 4.6<br>Indirizzo: YuexiuXihua Road No.439<br>Link Amap: <a href='???????' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 12</span><span class='badge'>XINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Chengcheng Jianjiao (Xihua Road Branch)</b>
+            <div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Ravioli<br>Prezzo medio: 25 ¥<br>Voto medio: 4.6<br>Indirizzo: LiwanXihua Road No.464 Nanhai Middle School Junior High School Bupang<br>Link Amap: <a href='https://surl.amap.com/baKDmDMQdS2' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 25</span><span class='badge'>XINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Cucina Sanhe</b>
+            <div class='meta'>Zona: XINHUA RD<br>Tipo cucina: Cinese misto<br>Prezzo medio: 19 ¥<br>Voto medio: 4.5<br>Indirizzo: 西华路484号<br>Link Amap: <a href='https://surl.amap.com/bciE5jQ139Pf' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 19</span><span class='badge'>XINHUA RD</span></div>
+        </div>
+        
+        <h2>ZHUJIANG NEW TOWN</h2>
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Negozio di Dumplings Jurong</b>
+            <div class='meta'>Zona: ZHUJIANG NEW TOWN<br>Tipo cucina: Ravioli<br>Prezzo medio: 23 ¥<br>Voto medio: 4.6<br>Indirizzo: 寺右二马路与寺右新马路交叉口南侧4号档铺(近五羊中学)<br>Link Amap: <a href='https://surl.amap.com/bcrrYgW14ll' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 23</span><span class='badge'>ZHUJIANG NEW TOWN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍣</span>寿司郎(花城汇南区店)</b>
+            <div class='meta'>Zona: ZHUJIANG NEW TOWN<br>Tipo cucina: Sushiro<br>Indirizzo: 花城大道89号花城汇南区B1层<br>Link Amap: <a href='https://surl.amap.com/bcXjOSe184e7' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>ZHUJIANG NEW TOWN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍚</span>Minji Potted Rice (Tiyu West Branch)</b>
+            <div class='meta'>Zona: ZHUJIANG NEW TOWN<br>Tipo cucina: Riso in pentola<br>Prezzo medio: 28 ¥<br>Voto medio: 4.7<br>Indirizzo: 广利路80号(体育西路地铁站G口步行250米)<br>Link Amap: <a href='https://surl.amap.com/bavCIkq14e1M' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 28</span><span class='badge'>ZHUJIANG NEW TOWN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Casa del Tè Lu Yun·Dim Sum Fatti a Mano (Negozio Tiyuxi)</b>
+            <div class='meta'>Zona: ZHUJIANG NEW TOWN<br>Tipo cucina: Cantonese<br>Prezzo medio: 81 ¥<br>Voto medio: 4.7<br>Indirizzo: TianheLiuyun 1st Street No.17 Wenchang Business Building F F2 (Liuyun Kindergarten Pangjin Parc Central Plaza)<br>Link Amap: <a href='https://surl.amap.com/bbxkJto1ja6e' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 81</span><span class='badge'>ZHUJIANG NEW TOWN</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🐟</span>Yangcheng Tiefanwan</b>
+            <div class='meta'>Zona: ZHUJIANG NEW TOWN<br>Tipo cucina: Carne pesce cinese<br>Prezzo medio: 48 ¥<br>Voto medio: 4.6<br>Indirizzo: Tianhe South 2nd Road No.6 Zhi San OneLink Walk Back Street<br>Link Amap: <a href='https://surl.amap.com/bayN5981x065' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 48</span><span class='badge'>ZHUJIANG NEW TOWN</span></div>
+        </div>
+    </section>
+
+    <!-- Chongqing Section -->
+    <section id='city-chongqing' class='city-wrap hidden'>
+        <div class='city-titlebar'>
+            <button class='backToHome btn' title='Torna alla selezione'>← Città</button>
+            <h1>Chongqing <small>· guida locale</small></h1>
+        </div>
         <div class='controls'>
             <div class='row'>
                 <input id='search-chongqing' placeholder='Cerca in Chongqing...'>
             </div>
         </div>
-        
         <div class='favorites'>
             <h2>Preferiti <button class='btn' id='clearFavs-chongqing' style='margin-left:auto'>Svuota</button></h2>
             <div class='list'></div>
         </div>
-        
         <h1>Chongqing — Lista Finale (53)</h1>
         
         <h2>EXTRA</h2>
-        <div class='card'><b><span class='icon'>🍵</span>Dongfa Road Chabingting (Times Paradise Walk Hall E Shop)</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 74</span><span class='badge'>EXTRA</span></div><div class='meta'>Zona: EXTRA<br>Tipo cucina: Cantonese<br>Prezzo medio: 74 ¥<br>Voto medio: 4.4<br>Indirizzo: 石油路街道时代天街12号E馆-5F<br><a href='https://surl.amap.com/gbiQu06dPH' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🦆</span>Huiweihei Braised Duck Pot Shiyu 2006 (Chongqing Times Paradise Walk Branch)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 81</span><span class='badge'>EXTRA</span></div><div class='meta'>Zona: EXTRA<br>Tipo cucina: Anatra<br>Prezzo medio: 81 ¥<br>Voto medio: 4.7<br>Indirizzo: 大坪时代天街时代汇11栋1楼2-45号<br><a href='https://surl.amap.com/gaObjZAbe1v' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Casa di Noodles Gao Laoyao</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 16</span><span class='badge'>EXTRA</span></div><div class='meta'>Zona: EXTRA<br>Tipo cucina: Noodles<br>Prezzo medio: 16 ¥<br>Voto medio: 4.5<br>Indirizzo: ShapingbaHanyu Road No.125 No.1-1<br><a href='https://surl.amap.com/gaPzKZEaacr' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Harbin Boiled Dumplings (Shapingba Branch)</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 32</span><span class='badge'>EXTRA</span></div><div class='meta'>Zona: EXTRA<br>Tipo cucina: Ravioli<br>Prezzo medio: 32 ¥<br>Voto medio: 4.5<br>Indirizzo: 汉渝路59-1号<br><a href='https://surl.amap.com/g9ShjlA12foA' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-
-<h2>GUANYNQIAO</h2>
-<div class='card'><b><span class='icon'>🥟</span>Harbin Boiled Dumplings (Guanyinqiao West Rind Road Shop)</b><div class='badges'><span class='badge'>★ 4.0</span><span class='badge'>¥ 13</span><span class='badge'>GUANYNQIAO</span></div><div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Ravioli<br>Prezzo medio: 13 ¥<br>Voto medio: 4.0<br>Indirizzo: 观音桥嘉陵三村12-1-5(观音桥地铁站1号口步行260米)<br><a href='https://surl.amap.com/fYiICHs1gdNH' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍤</span>Kenmei Fried Shrimp with Chilli (Guanyinqiao Branch)</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 47</span><span class='badge'>GUANYNQIAO</span></div><div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Gamberi sale e pepe<br>Prezzo medio: 47 ¥<br>Voto medio: 4.4<br>Indirizzo: 观音桥夜市(观音桥地铁站6A口步行220米)<br><a href='https://surl.amap.com/fWUsx0Wt8QK' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🌶️</span>Zaoxianglao Restaurant (Sweet Home Old Store)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 71</span><span class='badge'>GUANYNQIAO</span></div><div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Cucina sichuan, consigliato da amico<br>Prezzo medio: 71 ¥<br>Voto medio: 4.6<br>Indirizzo: JiangbeiBeicheng Tianjie Street No.14 No.Attached6<br><a href='https://surl.amap.com/fXY6yke179VI' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Zhu'er Noodle Restaurant (Yanghe 3rd Road Shop)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 14</span><span class='badge'>GUANYNQIAO</span></div><div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Noodles<br>Prezzo medio: 14 ¥<br>Voto medio: 4.7<br>Indirizzo: JiangbeiGuanyin Bridge Yanghe 3rd Road Yanghe'ercun No.3 No.Attached8<br><a href='https://surl.amap.com/fZHN48mrc31' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Un boccone di gnocco di zuppa</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 18</span><span class='badge'>GUANYNQIAO</span></div><div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Ravioli e Noodles<br>Prezzo medio: 18 ¥<br>Voto medio: 4.6<br>Indirizzo: 洋河四路10号附7号<br><a href='https://surl.amap.com/fYvz0lM2dcW' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🌶️</span>Friendship Food Shop (9th Street Branch)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 90</span><span class='badge'>GUANYNQIAO</span></div><div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Cucina sichuan con opzioni non piccanti<br>Prezzo medio: 90 ¥<br>Voto medio: 4.7<br>Indirizzo: 观音桥街道兴隆路18号附14号<br><a href='https://surl.amap.com/fZNr0hEg8QI' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Shandong Handmade Dumplings</b><div class='badges'><span class='badge'>★ 3.6</span><span class='badge'>¥ 12</span><span class='badge'>GUANYNQIAO</span></div><div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Ravioli<br>Prezzo medio: 12 ¥<br>Voto medio: 3.6<br>Indirizzo: 山水天成1号附10号<br><a href='https://surl.amap.com/g1jzuVwK27x' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-
-<h2>LINHUA RD + LIZIBA +EILING</h2>
-<div class='card'><b><span class='icon'>🥟</span>Dongbeijin Dumpling Restaurant (Jiefangbei Branch)</b><div class='badges'><span class='badge'>★ 4.2</span><span class='badge'>¥ 8</span><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Ravioli<br>Prezzo medio: 8 ¥<br>Voto medio: 4.2<br>Indirizzo: 中山一路6号附54号(七星岗地铁站1号口步行140米)<br><a href='https://surl.amap.com/g3Ux1pQv9Ne' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Ristorante Chunyang</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 40</span><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Piattini tipici<br>Prezzo medio: 40 ¥<br>Voto medio: 4.6<br>Indirizzo: YuzhongZhongyi Branch Road No.62 (Qixinggang Subway Station Entrance & Exit 2 Opposite)<br><a href='https://surl.amap.com/g3W30GaxeF9' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>临华老面馆</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 14</span><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Noodles strani<br>Prezzo medio: 14 ¥<br>Voto medio: 4.6<br>Indirizzo: 临华路50号附一号10号线坐直梯上来右侧巷道下行150米直梯在4号口不上扶梯<br><a href='https://surl.amap.com/g3tD9vw1i7PK' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🫓</span>冉冉名小吃(张家花园店) Mingte Snack</b><div class='badges'><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Bao e cose strane<br>Indirizzo: YuzhongZhangjia Huayuan Street No.64-No.Attached12 (Qixinggang Subway Station Entrance & Exit 3 Pedestrian 310 Meters)<br><a href='https://surl.amap.com/g4tRHtA1jdLP' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🔥</span>Piccolo Hot Pot Mao Du (Negozio Principale)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 62</span><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: HotPot<br>Prezzo medio: 62 ¥<br>Voto medio: 4.6<br>Indirizzo: 红球坝39号1-5号<br><a href='https://surl.amap.com/g5oz1wOl30I' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🔥</span>Yuliang Chuanchuanxiang</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 49</span><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: HotPot<br>Prezzo medio: 49 ¥<br>Voto medio: 4.5<br>Indirizzo: 枇杷山正街241号237号(第三人民医院旁边)<br><a href='https://surl.amap.com/g6NONm6b12L' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🫓</span>Jiuyuan Steamed Stuffed Bun (Shangqing Temple Branch)</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 14</span><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Bao e risi<br>Prezzo medio: 14 ¥<br>Voto medio: 4.4<br>Indirizzo: YuzhongZhongshan 4th Road No.1 2 Floor (People Elementary School Pang)<br><a href='https://surl.amap.com/g6PpoMmreSx' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Hejiaxian Meat Dumplings 1 Jia 1 (China Plaza Branch)</b><div class='badges'><span class='badge'>★ 4.0</span><span class='badge'>¥ 11</span><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Wonton<br>Prezzo medio: 11 ¥<br>Voto medio: 4.0<br>Indirizzo: 长江一路5号中华广场B1层(两路口地铁站4号口步行80米)<br><a href='https://surl.amap.com/g6R2WiW1wddj' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Ristorante della Vecchia Strada</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 23</span><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Cucina tipica casereccia<br>Prezzo medio: 23 ¥<br>Voto medio: 4.6<br>Indirizzo: 两路口街道两路口老街11-12号(光知咖啡旁)<br><a href='https://surl.amap.com/g60kkOO1s8dI' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Chenlaotou Noodle Restaurant</b><div class='badges'><span class='badge'>★ 4.2</span><span class='badge'>¥ 11</span><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Noodles<br>Prezzo medio: 11 ¥<br>Voto medio: 4.2<br>Indirizzo: 体育路23号(近血液中心)<br><a href='https://surl.amap.com/g7p4Dymmbpk' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>贺记路边面馆</b><div class='badges'><span class='badge'>★ 4.1</span><span class='badge'>¥ 10</span><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Noodles<br>Prezzo medio: 10 ¥<br>Voto medio: 4.1<br>Indirizzo: 健康路11号(两路口地铁站5号口步行380米)<br><a href='https://surl.amap.com/g7Y1oMCB6Hn' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🫓</span>Baozi Yu Zhong</b><div class='badges'><span class='badge'>LINHUA RD</span></div><div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Bao<br>Indirizzo: YuzhongJiankang Road No.66<br><a href='https://surl.amap.com/g5AoT0yg6OM' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-
-<h2>NANBIN RD (tutti con vista su raffles)</h2>
-<div class='card'><b><span class='icon'>🔥</span>Ristorante Hotpot Chongqing Guoguoyan Shui Ba Kuai</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 129</span><span class='badge'>NANBIN RD</span></div><div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: HotPot<br>Prezzo medio: 129 ¥<br>Voto medio: 4.6<br>Indirizzo: 南滨路钟楼广场旁边2楼<br><a href='https://surl.amap.com/g87laQm79X6' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🔥</span>Solo hotpot</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 98</span><span class='badge'>NANBIN RD</span></div><div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: nan<br>Prezzo medio: 98 ¥<br>Voto medio: 4.6<br>Indirizzo: 南滨路钟楼广场长江美术馆2层-1号(挺近报旧址)<br><a href='https://surl.amap.com/g76SMou17cSx' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍢</span>Uno Sguardo a Chongqing·Ristorante e Bar Panoramico BBQ</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 154</span><span class='badge'>NANBIN RD</span></div><div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: BBQ<br>Prezzo medio: 154 ¥<br>Voto medio: 4.6<br>Indirizzo: 涂山镇喜马拉雅行政公馆B2层<br><a href='https://surl.amap.com/g78vtTgIemA' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🔥</span>Junjun Hot Pot</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 107</span><span class='badge'>NANBIN RD</span></div><div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: HotPot<br>Prezzo medio: 107 ¥<br>Voto medio: 4.4<br>Indirizzo: 涂山镇南滨路121号(Z23自编号2-4)<br><a href='https://surl.amap.com/g8wgWvQE1S0' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍢</span>Ristorante barbecue e tè pomeridiano sulla spiaggia</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 106</span><span class='badge'>NANBIN RD</span></div><div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: BBQ<br>Prezzo medio: 106 ¥<br>Voto medio: 4.6<br>Indirizzo: 涂山镇南滨路118号1-21(慈云寺老街后面)<br><a href='https://surl.amap.com/g92aTbE1B9mT' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🔥</span>Qisuo Jiangjing Hot Pot</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 95</span><span class='badge'>NANBIN RD</span></div><div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: nan<br>Prezzo medio: 95 ¥<br>Voto medio: 4.5<br>Indirizzo: 涂山慈云寺南100米(南滨路)<br><a href='https://surl.amap.com/g8fibXEoaJN' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Spaghetti di Riso in Piccola Pentola dello Yunnan</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 16</span><span class='badge'>NANBIN RD</span></div><div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: Spaghetti<br>Prezzo medio: 16 ¥<br>Voto medio: 4.4<br>Indirizzo: 涂山路与下浩路交叉口西南80米<br><a href='https://surl.amap.com/g95wanQbc9g' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🔥</span>重庆邮电大学好吃街</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 11</span><span class='badge'>NANBIN RD</span></div><div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: Hotpot<br>Prezzo medio: 11 ¥<br>Voto medio: 4.6<br>Indirizzo: 崇文路与黄桷垭后街交叉口南280米<br><a href='https://surl.amap.com/g7hrl7w184OJ' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-
-<h2>NANPING PEDESTRIAN STREET</h2>
-<div class='card'><b><span class='icon'>🍜</span>Huiweiwan Tujia Yangyufan (Jiafa Nan'an Shanghai City Shopping Center Branch)</b><div class='badges'><span class='badge'>★ 4.0</span><span class='badge'>¥ 26</span><span class='badge'>NANPING</span></div><div class='meta'>Zona: NANPING PEDESTRIAN STREET<br>Tipo cucina: Cibo cinese generale<br>Prezzo medio: 26 ¥<br>Voto medio: 4.0<br>Indirizzo: 南坪西路38号嘉发南岸上海城购物中心F1层<br><a href='https://surl.amap.com/g8ISDEyd9Y8' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍖</span>Benci Beef Chuanchuanxiang (Nanping Wanda Branch)</b><div class='badges'><span class='badge'>★ 4.3</span><span class='badge'>¥ 51</span><span class='badge'>NANPING</span></div><div class='meta'>Zona: NANPING PEDESTRIAN STREET<br>Tipo cucina: carne<br>Prezzo medio: 51 ¥<br>Voto medio: 4.3<br>Indirizzo: 南坪街道珊瑚路8号2栋1层商业14号<br><a href='https://surl.amap.com/gaCBp4aj0mk' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Zouguoguo Rice Noodles</b><div class='badges'><span class='badge'>★ 4.0</span><span class='badge'>¥ 22</span><span class='badge'>NANPING</span></div><div class='meta'>Zona: NANPING PEDESTRIAN STREET<br>Tipo cucina: Spaghetti di riso<br>Prezzo medio: 22 ¥<br>Voto medio: 4.0<br>Indirizzo: 南坪街道惠工路9号附22号<br><a href='https://surl.amap.com/ga9hJXoI0OU' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Qilu Dumpling Restaurant (Yuandan Shopping Plaza Nanping Pedestrian Street Branch)</b><div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 28</span><span class='badge'>NANPING</span></div><div class='meta'>Zona: NANPING PEDESTRIAN STREET<br>Tipo cucina: Ravioli<br>Prezzo medio: 28 ¥<br>Voto medio: 4.4<br>Indirizzo: 南城大道201号1楼(四小区车站附近)<br><a href='https://surl.amap.com/g9Hj9Jst8L6' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Negozio di Alimentari Yuanquan</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 25</span><span class='badge'>NANPING</span></div><div class='meta'>Zona: NANPING PEDESTRIAN STREET<br>Tipo cucina: Piatti tipici<br>Prezzo medio: 25 ¥<br>Voto medio: 4.6<br>Indirizzo: 花园七村东南门北50米(万寿路地铁站2A口步行70米)<br><a href='https://surl.amap.com/gac7y3Q89p5' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-
-<h2>YUZHONG</h2>
-<div class='card'><b><span class='icon'>🍜</span>Tagliatelle Super Li Bench</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 22</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodles<br>Prezzo medio: 22 ¥<br>Voto medio: 4.7<br>Indirizzo: 朝千路41号(朝天门地铁站5号口步行240米)<br><a href='https://surl.amap.com/fZWKmkucgIX' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍲</span>Casa del Tofu 99 (Via Pedonale Jiefangbei)</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 30</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Piatti tipici anche non piccanti<br>Prezzo medio: 30 ¥<br>Voto medio: 4.5<br>Indirizzo: YuzhongXinhua Road Daomenkou No.9 No.Attached5 Building 2 (Xiaoshizi Subway Station Entrance & Exit 7 Pedestrian 70 Meters)<br><a href='nan' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🔥</span>Peijie Hot Pot (Hongyadong Branch)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 68</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: HotPot<br>Prezzo medio: 68 ¥<br>Voto medio: 4.6<br>Indirizzo: 新重庆广场金融中心第1幢第2层<br><a href='nan' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Ravioli di Nanchino (Piazza Urbana Edificio B)</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 18</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Ravioli<br>Prezzo medio: 18 ¥<br>Voto medio: 4.5<br>Indirizzo: 邹容路118号都市广场B座B1层<br><a href='https://surl.amap.com/fZDqQKGfeYq' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Dunianglao Noodle Restaurant (Jiefangbei Branch)</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 21</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodle<br>Prezzo medio: 21 ¥<br>Voto medio: 4.5<br>Indirizzo: 邹容路67号<br><a href='https://surl.amap.com/g1VRXmS139oF' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Noodles Dengdeng di Shibati (Negozio dell'Edificio Yudu)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 22</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodle<br>Prezzo medio: 22 ¥<br>Voto medio: 4.7<br>Indirizzo: 八一路168号(优衣库正对面)<br><a href='https://surl.amap.com/g2rJNYa1a2Th' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🫓</span>Zio Mai·Panini all'Anatra Mandarina (Yudu Plaza)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 14</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Bao<br>Prezzo medio: 14 ¥<br>Voto medio: 4.6<br>Indirizzo: YuzhongNo.168, Bayi Road Yudu Mansion F F1<br><a href='https://surl.amap.com/g09gBhs1d6w' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🔥</span>Pentola piccante calda di Sorella Yu sulla strada Wuyi</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 43</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: HotPot<br>Prezzo medio: 43 ¥<br>Voto medio: 4.5<br>Indirizzo: 解放碑五一路264号棉麻大楼门面(与中华路交叉路口)<br><a href='https://surl.amap.com/g0GQbym104RQ' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🥟</span>Linma Cross-bridge Meat Dumplings (Jiefangbei Branch)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 19</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Ravioli<br>Prezzo medio: 19 ¥<br>Voto medio: 4.6<br>Indirizzo: 世贸大厦(临江门地铁站3号口步行50米)<br><a href='https://surl.amap.com/g2ZcG0C1m981' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🔥</span>Wenliang Hot Pot (Jiefangbei Branch)</b><div class='badges'><span class='badge'>★ 4.8</span><span class='badge'>¥ 80</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: HotPot<br>Prezzo medio: 80 ¥<br>Voto medio: 4.8<br>Indirizzo: 文化街116号<br><a href='https://surl.amap.com/g320o2yCgwm' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍺</span>Tales of A Small Town Minyao Music Wine House (Bayi Road Branch)</b><div class='badges'><span class='badge'>★ 4.3</span><span class='badge'>¥ 60</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Bar tipico/taverna con piattini<br>Prezzo medio: 60 ¥<br>Voto medio: 4.3<br>Indirizzo: 瑞富购物中心东门旁<br><a href='https://surl.amap.com/g2Eml8Gqf9p' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Casa di Noodles Old Spicy Wonton Chongqing (Negozio Principale di Jiefangbei)</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 18</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodles e Wonton<br>Prezzo medio: 18 ¥<br>Voto medio: 4.7<br>Indirizzo: 民生路250号海航保利国际中心正对面<br><a href='https://surl.amap.com/g4b8h9s1m9Zt' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🔥</span>Hot Pot della Fabbrica di Strumenti (Negozio Principale) si</b><div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 79</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: HotPot<br>Prezzo medio: 79 ¥<br>Voto medio: 4.5<br>Indirizzo: YuzhongLiberation Monument Linjiang Gate Xinhua Daily Newspaper Former Site Xiaxing 200 Meters<br><a href='https://surl.amap.com/g3Grr5kf58m' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Afu Bandengmian (Shibati Shop)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 20</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodles e Wonton<br>Prezzo medio: 20 ¥<br>Voto medio: 4.6<br>Indirizzo: 解放碑街道较场口临68-17号A5、A7-A20、A23、A24号(霸王茶姬旁边路口直行30米德克士楼下)<br><a href='https://surl.amap.com/g4fik6W187ET' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Noodles di Panchina Ah Fu (Jiefangbei Sole e Luna)</b><div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 20</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodles<br>Prezzo medio: 20 ¥<br>Voto medio: 4.6<br>Indirizzo: 解放碑街道民权路89号日月光中心广场L1008号商铺(星河商务大厦正对面较场口轻轨站2号口出站左转30米)<br><a href='https://surl.amap.com/g4heKiau7vB' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🍜</span>Shaxian Delicacies (Liangjiang Jiayuan Shop)</b><div class='badges'><span class='badge'>★ 4.2</span><span class='badge'>¥ 16</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Cucina Fujian<br>Prezzo medio: 16 ¥<br>Voto medio: 4.2<br>Indirizzo: Xinhua Road No.16 (Chaotianmen Subway Station Entrance & Exit 5 Pedestrian 60 Meters)<br><a href='https://surl.amap.com/gcspe4q1mboj' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
-<div class='card'><b><span class='icon'>🫓</span>nan</b><div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 5</span><span class='badge'>YUZHONG</span></div><div class='meta'>Zona: YUZHONG<br>Tipo cucina: Pancake cinesi<br>Prezzo medio: 5 ¥<br>Voto medio: 4.7<br>Indirizzo: YuzhongHeping Road No.133 Beside Tikan'er (Jiaochangkou Subway Station Entrance & Exit 5 Pedestrian 180 Meters)<br><a href='https://surl.amap.com/g4OBK7Y14fBy' target='_blank' class='mapbtn'>Apri in mappa</a></div><div class='fav off'>★</div></div>
+        <div class='card'>
+            <b><span class='icon'>🍵</span>Dongfa Road Chabingting (Times Paradise Walk Hall E Shop)</b>
+            <div class='meta'>Zona: EXTRA<br>Tipo cucina: Cantonese<br>Prezzo medio: 74 ¥<br>Voto medio: 4.4<br>Indirizzo: 石油路街道时代天街12号E馆-5F<br>Link Amap: <a href='https://surl.amap.com/gbiQu06dPH' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 74</span><span class='badge'>EXTRA</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🦆</span>Huiweihei Braised Duck Pot Shiyu 2006 (Chongqing Times Paradise Walk Branch)</b>
+            <div class='meta'>Zona: EXTRA<br>Tipo cucina: Anatra<br>Prezzo medio: 81 ¥<br>Voto medio: 4.7<br>Indirizzo: 大坪时代天街时代汇11栋1楼2-45号<br>Link Amap: <a href='https://surl.amap.com/gaObjZAbe1v' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 81</span><span class='badge'>EXTRA</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Casa di Noodles Gao Laoyao</b>
+            <div class='meta'>Zona: EXTRA<br>Tipo cucina: Noodles<br>Prezzo medio: 16 ¥<br>Voto medio: 4.5<br>Indirizzo: ShapingbaHanyu Road No.125 No.1-1<br>Link Amap: <a href='https://surl.amap.com/gaPzKZEaacr' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 16</span><span class='badge'>EXTRA</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Harbin Boiled Dumplings (Shapingba Branch)</b>
+            <div class='meta'>Zona: EXTRA<br>Tipo cucina: Ravioli<br>Prezzo medio: 32 ¥<br>Voto medio: 4.5<br>Indirizzo: 汉渝路59-1号<br>Link Amap: <a href='https://surl.amap.com/g9ShjlA12foA' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 32</span><span class='badge'>EXTRA</span></div>
+        </div>
+        
+        <h2>GUANYNQIAO</h2>
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Harbin Boiled Dumplings (Guanyinqiao West Rind Road Shop)</b>
+            <div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Ravioli<br>Prezzo medio: 13 ¥<br>Voto medio: 4.0<br>Indirizzo: 观音桥嘉陵三村12-1-5(观音桥地铁站1号口步行260米)<br>Link Amap: <a href='https://surl.amap.com/fYiICHs1gdNH' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.0</span><span class='badge'>¥ 13</span><span class='badge'>GUANYNQIAO</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍤</span>Kenmei Fried Shrimp with Chilli (Guanyinqiao Branch)</b>
+            <div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Gamberi sale e pepe<br>Prezzo medio: 47 ¥<br>Voto medio: 4.4<br>Indirizzo: 观音桥夜市(观音桥地铁站6A口步行220米)<br>Link Amap: <a href='https://surl.amap.com/fWUsx0Wt8QK' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 47</span><span class='badge'>GUANYNQIAO</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🌶️</span>Zaoxianglao Restaurant (Sweet Home Old Store)</b>
+            <div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Cucina sichuan, consigliato da amico<br>Prezzo medio: 71 ¥<br>Voto medio: 4.6<br>Indirizzo: JiangbeiBeicheng Tianjie Street No.14 No.Attached6<br>Link Amap: <a href='https://surl.amap.com/fXY6yke179VI' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 71</span><span class='badge'>GUANYNQIAO</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Zhu&#x27;er Noodle Restaurant (Yanghe 3rd Road Shop)</b>
+            <div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Noodles<br>Prezzo medio: 14 ¥<br>Voto medio: 4.7<br>Indirizzo: JiangbeiGuanyin Bridge Yanghe 3rd Road Yanghe&#x27;ercun No.3 No.Attached8<br>Link Amap: <a href='https://surl.amap.com/fZHN48mrc31' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 14</span><span class='badge'>GUANYNQIAO</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Un boccone di gnocco di zuppa</b>
+            <div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Ravioli e Noodles<br>Prezzo medio: 18 ¥<br>Voto medio: 4.6<br>Indirizzo: 洋河四路10号附7号<br>Link Amap: <a href='https://surl.amap.com/fYvz0lM2dcW' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 18</span><span class='badge'>GUANYNQIAO</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🌶️</span>Friendship Food Shop (9th Street Branch)</b>
+            <div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Cucina sichuan con opzioni non piccanti<br>Prezzo medio: 90 ¥<br>Voto medio: 4.7<br>Indirizzo: 观音桥街道兴隆路18号附14号<br>Link Amap: <a href='https://surl.amap.com/fZNr0hEg8QI' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 90</span><span class='badge'>GUANYNQIAO</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Shandong Handmade Dumplings</b>
+            <div class='meta'>Zona: GUANYNQIAO<br>Tipo cucina: Ravioli<br>Prezzo medio: 12 ¥<br>Voto medio: 3.6<br>Indirizzo: 山水天成1号附10号<br>Link Amap: <a href='https://surl.amap.com/g1jzuVwK27x' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 3.6</span><span class='badge'>¥ 12</span><span class='badge'>GUANYNQIAO</span></div>
+        </div>
+        
+        <h2>LINHUA RD + LIZIBA +EILING</h2>
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Dongbeijin Dumpling Restaurant (Jiefangbei Branch)</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Ravioli<br>Prezzo medio: 8 ¥<br>Voto medio: 4.2<br>Indirizzo: 中山一路6号附54号(七星岗地铁站1号口步行140米)<br>Link Amap: <a href='https://surl.amap.com/g3Ux1pQv9Ne' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.2</span><span class='badge'>¥ 8</span><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Ristorante Chunyang</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Piattini tipici<br>Prezzo medio: 40 ¥<br>Voto medio: 4.6<br>Indirizzo: YuzhongZhongyi Branch Road No.62 (Qixinggang Subway Station Entrance &amp; Exit 2 Opposite)<br>Link Amap: <a href='https://surl.amap.com/g3W30GaxeF9' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 40</span><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>临华老面馆</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Noodles strani<br>Prezzo medio: 14 ¥<br>Voto medio: 4.6<br>Indirizzo: 临华路50号附一号10号线坐直梯上来右侧巷道下行150米直梯在4号口不上扶梯<br>Link Amap: <a href='https://surl.amap.com/g3tD9vw1i7PK' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 14</span><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🫓</span>冉冉名小吃(张家花园店) Mingte Snack</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Bao e cose strane<br>Indirizzo: YuzhongZhangjia Huayuan Street No.64-No.Attached12 (Qixinggang Subway Station Entrance &amp; Exit 3 Pedestrian 310 Meters)<br>Link Amap: <a href='https://surl.amap.com/g4tRHtA1jdLP' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Piccolo Hot Pot Mao Du (Negozio Principale)</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: HotPot<br>Prezzo medio: 62 ¥<br>Voto medio: 4.6<br>Indirizzo: 红球坝39号1-5号<br>Link Amap: <a href='https://surl.amap.com/g5oz1wOl30I' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 62</span><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Yuliang Chuanchuanxiang</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: HotPot<br>Prezzo medio: 49 ¥<br>Voto medio: 4.5<br>Indirizzo: 枇杷山正街241号237号(第三人民医院旁边)<br>Link Amap: <a href='https://surl.amap.com/g6NONm6b12L' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 49</span><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🫓</span>Jiuyuan Steamed Stuffed Bun (Shangqing Temple Branch)</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Bao e risi<br>Prezzo medio: 14 ¥<br>Voto medio: 4.4<br>Indirizzo: YuzhongZhongshan 4th Road No.1 2 Floor (People Elementary School Pang)<br>Link Amap: <a href='https://surl.amap.com/g6PpoMmreSx' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 14</span><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Hejiaxian Meat Dumplings 1 Jia 1 (China Plaza Branch)</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Wonton<br>Prezzo medio: 11 ¥<br>Voto medio: 4.0<br>Indirizzo: 长江一路5号中华广场B1层(两路口地铁站4号口步行80米)<br>Link Amap: <a href='https://surl.amap.com/g6R2WiW1wddj' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.0</span><span class='badge'>¥ 11</span><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Ristorante della Vecchia Strada</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Cucina tipica casereccia<br>Prezzo medio: 23 ¥<br>Voto medio: 4.6<br>Indirizzo: 两路口街道两路口老街11-12号(光知咖啡旁)<br>Link Amap: <a href='https://surl.amap.com/g60kkOO1s8dI' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 23</span><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Chenlaotou Noodle Restaurant</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Noodles<br>Prezzo medio: 11 ¥<br>Voto medio: 4.2<br>Indirizzo: 体育路23号(近血液中心)<br>Link Amap: <a href='https://surl.amap.com/g7p4Dymmbpk' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.2</span><span class='badge'>¥ 11</span><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>贺记路边面馆</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Noodles<br>Prezzo medio: 10 ¥<br>Voto medio: 4.1<br>Indirizzo: 健康路11号(两路口地铁站5号口步行380米)<br>Link Amap: <a href='https://surl.amap.com/g7Y1oMCB6Hn' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.1</span><span class='badge'>¥ 10</span><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🫓</span>Baozi Yu Zhong</b>
+            <div class='meta'>Zona: LINHUA RD + LIZIBA +EILING<br>Tipo cucina: Bao<br>Indirizzo: YuzhongJiankang Road No.66<br>Link Amap: <a href='https://surl.amap.com/g5AoT0yg6OM' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>LINHUA RD</span></div>
+        </div>
+        
+        <h2>NANBIN RD (tutti con vista su raffles)</h2>
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Ristorante Hotpot Chongqing Guoguoyan Shui Ba Kuai</b>
+            <div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: HotPot<br>Prezzo medio: 129 ¥<br>Voto medio: 4.6<br>Indirizzo: 南滨路钟楼广场旁边2楼<br>Link Amap: <a href='https://surl.amap.com/g87laQm79X6' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 129</span><span class='badge'>NANBIN RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Solo hotpot</b>
+            <div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: nan<br>Prezzo medio: 98 ¥<br>Voto medio: 4.6<br>Indirizzo: 南滨路钟楼广场长江美术馆2层-1号(挺近报旧址)<br>Link Amap: <a href='https://surl.amap.com/g76SMou17cSx' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 98</span><span class='badge'>NANBIN RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍢</span>Uno Sguardo a Chongqing·Ristorante e Bar Panoramico BBQ</b>
+            <div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: BBQ<br>Prezzo medio: 154 ¥<br>Voto medio: 4.6<br>Indirizzo: 涂山镇喜马拉雅行政公馆B2层<br>Link Amap: <a href='https://surl.amap.com/g78vtTgIemA' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 154</span><span class='badge'>NANBIN RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Junjun Hot Pot</b>
+            <div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: HotPot<br>Prezzo medio: 107 ¥<br>Voto medio: 4.4<br>Indirizzo: 涂山镇南滨路121号(Z23自编号2-4)<br>Link Amap: <a href='https://surl.amap.com/g8wgWvQE1S0' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 107</span><span class='badge'>NANBIN RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍢</span>Ristorante barbecue e tè pomeridiano sulla spiaggia</b>
+            <div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: BBQ<br>Prezzo medio: 106 ¥<br>Voto medio: 4.6<br>Indirizzo: 涂山镇南滨路118号1-21(慈云寺老街后面)<br>Link Amap: <a href='https://surl.amap.com/g92aTbE1B9mT' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 106</span><span class='badge'>NANBIN RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Qisuo Jiangjing Hot Pot</b>
+            <div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: nan<br>Prezzo medio: 95 ¥<br>Voto medio: 4.5<br>Indirizzo: 涂山慈云寺南100米(南滨路)<br>Link Amap: <a href='https://surl.amap.com/g8fibXEoaJN' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 95</span><span class='badge'>NANBIN RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Spaghetti di Riso in Piccola Pentola dello Yunnan</b>
+            <div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: Spaghetti<br>Prezzo medio: 16 ¥<br>Voto medio: 4.4<br>Indirizzo: 涂山路与下浩路交叉口西南80米<br>Link Amap: <a href='https://surl.amap.com/g95wanQbc9g' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 16</span><span class='badge'>NANBIN RD</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>重庆邮电大学好吃街</b>
+            <div class='meta'>Zona: NANBIN RD (tutti con vista su raffles)<br>Tipo cucina: Hotpot<br>Prezzo medio: 11 ¥<br>Voto medio: 4.6<br>Indirizzo: 崇文路与黄桷垭后街交叉口南280米<br>Link Amap: <a href='https://surl.amap.com/g7hrl7w184OJ' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 11</span><span class='badge'>NANBIN RD</span></div>
+        </div>
+        
+        <h2>NANPING PEDESTRIAN STREET</h2>
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Huiweiwan Tujia Yangyufan (Jiafa Nan&#x27;an Shanghai City Shopping Center Branch)</b>
+            <div class='meta'>Zona: NANPING PEDESTRIAN STREET<br>Tipo cucina: Cibo cinese generale<br>Prezzo medio: 26 ¥<br>Voto medio: 4.0<br>Indirizzo: 南坪西路38号嘉发南岸上海城购物中心F1层<br>Link Amap: <a href='https://surl.amap.com/g8ISDEyd9Y8' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.0</span><span class='badge'>¥ 26</span><span class='badge'>NANPING</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍖</span>Benci Beef Chuanchuanxiang (Nanping Wanda Branch)</b>
+            <div class='meta'>Zona: NANPING PEDESTRIAN STREET<br>Tipo cucina: carne<br>Prezzo medio: 51 ¥<br>Voto medio: 4.3<br>Indirizzo: 南坪街道珊瑚路8号2栋1层商业14号<br>Link Amap: <a href='https://surl.amap.com/gaCBp4aj0mk' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.3</span><span class='badge'>¥ 51</span><span class='badge'>NANPING</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Zouguoguo Rice Noodles</b>
+            <div class='meta'>Zona: NANPING PEDESTRIAN STREET<br>Tipo cucina: Spaghetti di riso<br>Prezzo medio: 22 ¥<br>Voto medio: 4.0<br>Indirizzo: 南坪街道惠工路9号附22号<br>Link Amap: <a href='https://surl.amap.com/ga9hJXoI0OU' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.0</span><span class='badge'>¥ 22</span><span class='badge'>NANPING</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Qilu Dumpling Restaurant (Yuandan Shopping Plaza Nanping Pedestrian Street Branch)</b>
+            <div class='meta'>Zona: NANPING PEDESTRIAN STREET<br>Tipo cucina: Ravioli<br>Prezzo medio: 28 ¥<br>Voto medio: 4.4<br>Indirizzo: 南城大道201号1楼(四小区车站附近)<br>Link Amap: <a href='https://surl.amap.com/g9Hj9Jst8L6' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.4</span><span class='badge'>¥ 28</span><span class='badge'>NANPING</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Negozio di Alimentari Yuanquan</b>
+            <div class='meta'>Zona: NANPING PEDESTRIAN STREET<br>Tipo cucina: Piatti tipici<br>Prezzo medio: 25 ¥<br>Voto medio: 4.6<br>Indirizzo: 花园七村东南门北50米(万寿路地铁站2A口步行70米)<br>Link Amap: <a href='https://surl.amap.com/gac7y3Q89p5' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 25</span><span class='badge'>NANPING</span></div>
+        </div>
+        
+        <h2>YUZHONG</h2>
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Tagliatelle Super Li Bench</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodles<br>Prezzo medio: 22 ¥<br>Voto medio: 4.7<br>Indirizzo: 朝千路41号(朝天门地铁站5号口步行240米)<br>Link Amap: <a href='https://surl.amap.com/fZWKmkucgIX' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 22</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍲</span>Casa del Tofu 99 (Via Pedonale Jiefangbei)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Piatti tipici anche non piccanti<br>Prezzo medio: 30 ¥<br>Voto medio: 4.5<br>Indirizzo: YuzhongXinhua Road Daomenkou No.9 No.Attached5 Building 2 (Xiaoshizi Subway Station Entrance &amp; Exit 7 Pedestrian 70 Meters)<br>Link Amap: <a href='nan' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 30</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Peijie Hot Pot (Hongyadong Branch)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: HotPot<br>Prezzo medio: 68 ¥<br>Voto medio: 4.6<br>Indirizzo: 新重庆广场金融中心第1幢第2层<br>Link Amap: <a href='nan' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 68</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Ravioli di Nanchino (Piazza Urbana Edificio B)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Ravioli<br>Prezzo medio: 18 ¥<br>Voto medio: 4.5<br>Indirizzo: 邹容路118号都市广场B座B1层<br>Link Amap: <a href='https://surl.amap.com/fZDqQKGfeYq' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 18</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Dunianglao Noodle Restaurant (Jiefangbei Branch)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodle<br>Prezzo medio: 21 ¥<br>Voto medio: 4.5<br>Indirizzo: 邹容路67号<br>Link Amap: <a href='https://surl.amap.com/g1VRXmS139oF' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 21</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Noodles Dengdeng di Shibati (Negozio dell&#x27;Edificio Yudu)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodle<br>Prezzo medio: 22 ¥<br>Voto medio: 4.7<br>Indirizzo: 八一路168号(优衣库正对面)<br>Link Amap: <a href='https://surl.amap.com/g2rJNYa1a2Th' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 22</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🫓</span>Zio Mai·Panini all&#x27;Anatra Mandarina (Yudu Plaza)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Bao<br>Prezzo medio: 14 ¥<br>Voto medio: 4.6<br>Indirizzo: YuzhongNo.168, Bayi Road Yudu Mansion F F1<br>Link Amap: <a href='https://surl.amap.com/g09gBhs1d6w' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 14</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Pentola piccante calda di Sorella Yu sulla strada Wuyi</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: HotPot<br>Prezzo medio: 43 ¥<br>Voto medio: 4.5<br>Indirizzo: 解放碑五一路264号棉麻大楼门面(与中华路交叉路口)<br>Link Amap: <a href='https://surl.amap.com/g0GQbym104RQ' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 43</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🥟</span>Linma Cross-bridge Meat Dumplings (Jiefangbei Branch)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Ravioli<br>Prezzo medio: 19 ¥<br>Voto medio: 4.6<br>Indirizzo: 世贸大厦(临江门地铁站3号口步行50米)<br>Link Amap: <a href='https://surl.amap.com/g2ZcG0C1m981' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 19</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Wenliang Hot Pot (Jiefangbei Branch)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: HotPot<br>Prezzo medio: 80 ¥<br>Voto medio: 4.8<br>Indirizzo: 文化街116号<br>Link Amap: <a href='https://surl.amap.com/g320o2yCgwm' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.8</span><span class='badge'>¥ 80</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍺</span>Tales of A Small Town Minyao Music Wine House (Bayi Road Branch)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Bar tipico/taverna con piattini<br>Prezzo medio: 60 ¥<br>Voto medio: 4.3<br>Indirizzo: 瑞富购物中心东门旁<br>Link Amap: <a href='https://surl.amap.com/g2Eml8Gqf9p' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.3</span><span class='badge'>¥ 60</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Casa di Noodles Old Spicy Wonton Chongqing (Negozio Principale di Jiefangbei)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodles e Wonton<br>Prezzo medio: 18 ¥<br>Voto medio: 4.7<br>Indirizzo: 民生路250号海航保利国际中心正对面<br>Link Amap: <a href='https://surl.amap.com/g4b8h9s1m9Zt' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 18</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🔥</span>Hot Pot della Fabbrica di Strumenti (Negozio Principale) si</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: HotPot<br>Prezzo medio: 79 ¥<br>Voto medio: 4.5<br>Indirizzo: YuzhongLiberation Monument Linjiang Gate Xinhua Daily Newspaper Former Site Xiaxing 200 Meters<br>Link Amap: <a href='https://surl.amap.com/g3Grr5kf58m' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.5</span><span class='badge'>¥ 79</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Afu Bandengmian (Shibati Shop)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodles e Wonton<br>Prezzo medio: 20 ¥<br>Voto medio: 4.6<br>Indirizzo: 解放碑街道较场口临68-17号A5、A7-A20、A23、A24号(霸王茶姬旁边路口直行30米德克士楼下)<br>Link Amap: <a href='https://surl.amap.com/g4fik6W187ET' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 20</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Noodles di Panchina Ah Fu (Jiefangbei Sole e Luna)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Noodles<br>Prezzo medio: 20 ¥<br>Voto medio: 4.6<br>Indirizzo: 解放碑街道民权路89号日月光中心广场L1008号商铺(星河商务大厦正对面较场口轻轨站2号口出站左转30米)<br>Link Amap: <a href='https://surl.amap.com/g4heKiau7vB' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.6</span><span class='badge'>¥ 20</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🍜</span>Shaxian Delicacies (Liangjiang Jiayuan Shop)</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Cucina Fujian<br>Prezzo medio: 16 ¥<br>Voto medio: 4.2<br>Indirizzo: Xinhua Road No.16 (Chaotianmen Subway Station Entrance &amp; Exit 5 Pedestrian 60 Meters)<br>Link Amap: <a href='https://surl.amap.com/gcspe4q1mboj' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.2</span><span class='badge'>¥ 16</span><span class='badge'>YUZHONG</span></div>
+        </div>
+        
+        <div class='card'>
+            <b><span class='icon'>🫓</span>nan</b>
+            <div class='meta'>Zona: YUZHONG<br>Tipo cucina: Pancake cinesi<br>Prezzo medio: 5 ¥<br>Voto medio: 4.7<br>Indirizzo: YuzhongHeping Road No.133 Beside Tikan&#x27;er (Jiaochangkou Subway Station Entrance &amp; Exit 5 Pedestrian 180 Meters)<br>Link Amap: <a href='https://surl.amap.com/g4OBK7Y14fBy' target='_blank' class='mapbtn'>Apri in mappa</a></div>
+            <div class='fav off' title='Aggiungi ai preferiti'>★</div>
+            <div class='badges'><span class='badge'>★ 4.7</span><span class='badge'>¥ 5</span><span class='badge'>YUZHONG</span></div>
+        </div>
     </section>
 
+    <div id='backToTop' title='Torna su'>↑</div>
+
     <script>
-        // JavaScript semplice
-        document.querySelectorAll('.city-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const city = card.dataset.city;
-                document.getElementById('home').classList.add('hidden');
-                document.querySelectorAll('[id^="city-"]').forEach(s => s.classList.add('hidden'));
-                document.getElementById('city-' + city).classList.remove('hidden');
-                document.querySelectorAll('.backToHome').forEach(btn => btn.style.display = 'inline-flex');
+        (function(){
+            const cities=['shenzhen','canton','chongqing'];
+            const names={
+                shenzhen:'Shenzhen',
+                canton:'Canton (Guangzhou)',
+                chongqing:'Chongqing'
+            };
+            
+            const KEY='fav_restos_cina';
+            
+            function storageAvailable(t){
+                try{
+                    const x='__t__';
+                    window[t].setItem(x,x);
+                    window[t].removeItem(x);
+                    return true;
+                }catch(e){
+                    return false;
+                }
+            }
+            
+            const hasLS=storageAvailable('localStorage');
+            const mem={fav:[]};
+            
+            const getFavs=()=> hasLS?(JSON.parse(localStorage.getItem(KEY)||'[]')):mem.fav;
+            const setFavs=a=>{
+                if(hasLS){
+                    try{localStorage.setItem(KEY, JSON.stringify(a));}catch(e){}
+                }else{
+                    mem.fav=a;
+                }
+            };
+            
+            const $=s=>document.querySelector(s);
+            const $$=s=>Array.from(document.querySelectorAll(s));
+            
+            function showHome(){
+                $('#home').classList.remove('hidden');
+                $$('.city-wrap').forEach(s=>s.classList.add('hidden'));
+                document.title='Ristoranti Cina';
+                $$('.backToHome').forEach(btn=>btn.style.display='none');
+                window.scrollTo(0,0);
+            }
+            
+            function showCity(id){
+                $('#home').classList.add('hidden');
+                $$('.city-wrap').forEach(s=>s.classList.add('hidden'));
+                const sec=$('#city-'+id);
+                if(sec){
+                    sec.classList.remove('hidden');
+                    document.title='Ristoranti · '+names[id];
+                    sec.querySelector('.backToHome').style.display='inline-flex';
+                    window.scrollTo(0,0);
+                }
+            }
+            
+            // Event listeners
+            document.addEventListener('click', (e)=>{
+                const btn=e.target.closest('.backToHome');
+                if(btn){
+                    showHome();
+                }
             });
-        });
-        
-        document.querySelectorAll('.backToHome').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.getElementById('home').classList.remove('hidden');
-                document.querySelectorAll('[id^="city-"]').forEach(s => s.classList.add('hidden'));
-                document.querySelectorAll('.backToHome').forEach(b => b.style.display = 'none');
+            
+            $$('.city-card').forEach(c=>{
+                c.addEventListener('click', ()=>showCity(c.dataset.city));
             });
-        });
-        
-        // Preferiti
-        document.querySelectorAll('.fav').forEach(fav => {
-            fav.addEventListener('click', function() {
-                this.classList.toggle('off');
-            });
-        });
-        
-        // Ricerca
-        document.querySelectorAll('input[type="text"]').forEach(input => {
-            input.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const cards = this.closest('section').querySelectorAll('.card');
+            
+            // Initialize each city
+            cities.forEach(cid=>{
+                const root = document.querySelector('#city-'+cid);
+                if(!root) return;
                 
-                cards.forEach(card => {
-                    const text = card.textContent.toLowerCase();
-                    card.style.display = text.includes(searchTerm) ? 'block' : 'none';
+                const cards = Array.from(root.querySelectorAll('.card'));
+                
+                function cardId(card){
+                    const name=(card.querySelector('b')?.innerText||'').trim();
+                    const link=card.querySelector('a[href]')?.href || '';
+                    return `${cid}|${name}|${link}`;
+                }
+                
+                function mark(card,on){
+                    const s=card.querySelector('.fav');
+                    if(!s)return;
+                    if(on){
+                        s.classList.remove('off');
+                        s.title='Rimuovi dai preferiti';
+                    }else{
+                        s.classList.add('off');
+                        s.title='Aggiungi ai preferiti';
+                    }
+                }
+                
+                function toggle(card){
+                    const id=cardId(card);
+                    const arr=getFavs();
+                    const i=arr.indexOf(id);
+                    if(i>=0){
+                        arr.splice(i,1);
+                    }else{
+                        arr.push(id);
+                    }
+                    setFavs(arr);
+                    mark(card,i<0);
+                    renderFavs();
+                }
+                
+                // Initialize cards
+                cards.forEach(card=>{
+                    const fav = card.querySelector('.fav');
+                    if(fav){
+                        ['click','touchend'].forEach(ev=>{
+                            fav.addEventListener(ev, e=>{
+                                e.preventDefault();
+                                e.stopPropagation();
+                                toggle(card);
+                            }, {passive:true});
+                        });
+                        mark(card, getFavs().includes(cardId(card)));
+                    }
                 });
+                
+                // Search functionality
+                const input = document.getElementById('search-'+cid);
+                if(input){
+                    input.addEventListener('input', ()=>{
+                        const q = input.value.toLowerCase();
+                        cards.forEach(c=>{
+                            c.style.display = c.innerText.toLowerCase().includes(q)?'block':'none';
+                        });
+                    });
+                }
+                
+                // Favorites list
+                const favBox = root.querySelector('.favorites .list');
+                function renderFavs(){
+                    if(!favBox) return;
+                    favBox.innerHTML='';
+                    const arr = getFavs().filter(id=> id.startsWith(cid+'|'));
+                    
+                    if(!arr.length){
+                        const em=document.createElement('div');
+                        em.className='empty';
+                        em.textContent='Nessun preferito ancora. Tocca la ★ su una card per salvarla.';
+                        favBox.appendChild(em);
+                        return;
+                    }
+                    
+                    arr.forEach(id=>{
+                        const orig = cards.find(cc=> cardId(cc) === id);
+                        if(!orig) return;
+                        const cl = orig.cloneNode(true);
+                        const star = cl.querySelector('.fav');
+                        if(star) star.remove();
+                        
+                        const rm=document.createElement('button');
+                        rm.className='btn';
+                        rm.textContent='Rimuovi';
+                        rm.style.marginTop='10px';
+                        rm.addEventListener('click',()=>{
+                            const all=getFavs();
+                            const idx=all.indexOf(id);
+                            if(idx>=0){
+                                all.splice(idx,1);
+                                setFavs(all);
+                            }
+                            renderFavs();
+                            cards.forEach(k=>{
+                                if(id===cardId(k)) mark(k,false);
+                            });
+                        });
+                        cl.appendChild(rm);
+                        favBox.appendChild(cl);
+                    });
+                }
+                
+                renderFavs();
+                
+                // Clear favorites button
+                const clearBtn = root.querySelector('#clearFavs-'+cid);
+                if(clearBtn){
+                    clearBtn.addEventListener('click', ()=>{
+                        const all = getFavs().filter(id=> !id.startsWith(cid+'|'));
+                        setFavs(all);
+                        renderFavs();
+                        cards.forEach(k=> mark(k,false));
+                    });
+                }
             });
-        });
+            
+            // Back to top button
+            const back=document.createElement('button');
+            back.id='backToTop';
+            back.title='Torna su';
+            back.textContent='↑';
+            document.body.appendChild(back);
+            
+            back.addEventListener('click',()=>{
+                window.scrollTo({top:0,behavior:'smooth'});
+            });
+            
+            window.addEventListener('scroll',()=>{
+                if(window.scrollY>300){
+                    back.classList.add('show');
+                }else{
+                    back.classList.remove('show');
+                }
+            });
+            
+            // Show home page initially
+            showHome();
+        })();
+    </script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(console.error);
+            });
+        }
     </script>
 </body>
 </html>
