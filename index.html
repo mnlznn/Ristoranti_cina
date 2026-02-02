@@ -92,24 +92,33 @@
     
     /* STELLA preferiti */
     .fav {
-        position: absolute;
-        left: 16px;
-        top: 16px;
-        font-size: 24px;
-        color: #ffd166;
-        cursor: pointer;
-        user-select: none;
-        z-index: 20;
-        padding: 6px 8px;
-        background: rgba(0,0,0,0.4);
-        border-radius: 8px;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-    }
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    font-size: 24px;
+    color: #ffd166;
+    cursor: pointer;
+    user-select: none;
+    z-index: 50;
+    padding: 6px 8px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.fav:hover {
+    background: rgba(0,0,0,0.6);
+    transform: scale(1.1);
+}
+
+.fav.off {
+    color: #666;
+}
     
     .fav:hover {
         background: rgba(0,0,0,0.6);
