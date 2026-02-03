@@ -1385,227 +1385,327 @@
 
     <div id='backToTop' title='Torna su'>↑</div>
 
-    <script>
-        (function(){
-            const cities=['shenzhen','canton','chongqing'];
-            const names={
-                shenzhen:'Shenzhen',
-                canton:'Canton (Guangzhou)',
-                chongqing:'Chongqing'
-            };
+<script>
+    (function(){
+        const cities = ['shenzhen', 'canton', 'chongqing'];
+        const names = {
+            shenzhen: 'Shenzhen',
+            canton: 'Canton (Guangzhou)',
+            chongqing: 'Chongqing'
+        };
+        
+        const STORAGE_KEY = 'fav_restos_cina';
+        
+        // Funzioni di utilità
+        const $ = s => document.querySelector(s);
+        const $$ = s => Array.from(document.querySelectorAll(s));
+        
+        // Storage
+        function getFavorites() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            } catch {
+                return [];
+            }
+        }
+        
+        function saveFavorites(favs) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(favs));
+            } catch (e) {
+                console.error('Errore salvataggio preferiti:', e);
+            }
+        }
+        
+        // Navigazione
+        function showHome() {
+            $('#home').classList.remove('hidden');
+            $$('.city-wrap').forEach(s => s.classList.add('hidden'));
+            document.title = 'Ristoranti Cina';
+            $$('.backToHome').forEach(btn => btn.style.display = 'none');
+            window.scrollTo(0, 0);
+        }
+        
+        function showCity(cityId) {
+            $('#home').classList.add('hidden');
+            $$('.city-wrap').forEach(s => s.classList.add('hidden'));
             
-            const KEY='fav_restos_cina';
-            
-            function storageAvailable(t){
-                try{
-                    const x='__t__';
-                    window[t].setItem(x,x);
-                    window[t].removeItem(x);
-                    return true;
-                }catch(e){
-                    return false;
-                }
+            const citySection = $(`#city-${cityId}`);
+            if (citySection) {
+                citySection.classList.remove('hidden');
+                document.title = `Ristoranti · ${names[cityId]}`;
+                citySection.querySelector('.backToHome').style.display = 'inline-flex';
+                window.scrollTo(0, 0);
+                
+                // Aggiorna i preferiti quando cambi città
+                updateFavoritesView(cityId);
+            }
+        }
+        
+        // Event listeners globali
+        document.addEventListener('click', (e) => {
+            // Torna a home
+            if (e.target.closest('.backToHome')) {
+                showHome();
+                return;
             }
             
-            const hasLS=storageAvailable('localStorage');
-            const mem={fav:[]};
-            
-            const getFavs=()=> hasLS?(JSON.parse(localStorage.getItem(KEY)||'[]')):mem.fav;
-            const setFavs=a=>{
-                if(hasLS){
-                    try{localStorage.setItem(KEY, JSON.stringify(a));}catch(e){}
-                }else{
-                    mem.fav=a;
-                }
-            };
-            
-            const $=s=>document.querySelector(s);
-            const $$=s=>Array.from(document.querySelectorAll(s));
-            
-            function showHome(){
-                $('#home').classList.remove('hidden');
-                $$('.city-wrap').forEach(s=>s.classList.add('hidden'));
-                document.title='Ristoranti Cina';
-                $$('.backToHome').forEach(btn=>btn.style.display='none');
-                window.scrollTo(0,0);
+            // Click su card città
+            const cityCard = e.target.closest('.city-card');
+            if (cityCard && cityCard.dataset.city) {
+                showCity(cityCard.dataset.city);
+                return;
             }
             
-            function showCity(id){
-                $('#home').classList.add('hidden');
-                $$('.city-wrap').forEach(s=>s.classList.add('hidden'));
-                const sec=$('#city-'+id);
-                if(sec){
-                    sec.classList.remove('hidden');
-                    document.title='Ristoranti · '+names[id];
-                    sec.querySelector('.backToHome').style.display='inline-flex';
-                    window.scrollTo(0,0);
+            // Click su stella preferiti
+            const star = e.target.closest('.fav');
+            if (star && !e.target.closest('#backToTop')) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const card = star.closest('.card');
+                if (card) {
+                    toggleFavorite(card);
                 }
             }
+        });
+        
+        // Gestione preferiti
+        function getCardId(card) {
+            // Crea un ID univoco per ogni ristorante
+            const title = card.querySelector('b')?.textContent?.trim() || '';
+            const address = card.querySelector('.meta')?.textContent?.split('\n')[0] || '';
+            const citySection = card.closest('.city-wrap');
+            const cityId = citySection ? citySection.id.replace('city-', '') : 'unknown';
             
-            // Event listeners
-            document.addEventListener('click', (e)=>{
-                const btn=e.target.closest('.backToHome');
-                if(btn){
-                    showHome();
-                }
-            });
+            return `${cityId}|${title}|${address}`;
+        }
+        
+        function toggleFavorite(card) {
+            const cardId = getCardId(card);
+            const favorites = getFavorites();
+            const star = card.querySelector('.fav');
             
-            $$('.city-card').forEach(c=>{
-                c.addEventListener('click', ()=>showCity(c.dataset.city));
-            });
+            // Trova se già nei preferiti
+            const index = favorites.findIndex(fav => fav.id === cardId);
             
-            // Initialize each city
-            cities.forEach(cid=>{
-                const root = document.querySelector('#city-'+cid);
-                if(!root) return;
-                
-                const cards = Array.from(root.querySelectorAll('.card'));
-                
-                function cardId(card){
-                    const name=(card.querySelector('b')?.innerText||'').trim();
-                    const link=card.querySelector('a[href]')?.href || '';
-                    return `${cid}|${name}|${link}`;
+            if (index > -1) {
+                // Rimuovi
+                favorites.splice(index, 1);
+                if (star) {
+                    star.classList.add('off');
+                    star.title = 'Aggiungi ai preferiti';
                 }
+            } else {
+                // Aggiungi
+                const citySection = card.closest('.city-wrap');
+                const cityId = citySection ? citySection.id.replace('city-', '') : 'unknown';
                 
-                function mark(card,on){
-                    const s=card.querySelector('.fav');
-                    if(!s)return;
-                    if(on){
-                        s.classList.remove('off');
-                        s.title='Rimuovi dai preferiti';
-                    }else{
-                        s.classList.add('off');
-                        s.title='Aggiungi ai preferiti';
-                    }
-                }
-                
-                function toggle(card){
-                    const id=cardId(card);
-                    const arr=getFavs();
-                    const i=arr.indexOf(id);
-                    if(i>=0){
-                        arr.splice(i,1);
-                    }else{
-                        arr.push(id);
-                    }
-                    setFavs(arr);
-                    mark(card,i<0);
-                    renderFavs();
-                }
-                
-                // Initialize cards
-                cards.forEach(card=>{
-                    const fav = card.querySelector('.fav');
-                    if(fav){
-                        ['click','touchend'].forEach(ev=>{
-                            fav.addEventListener(ev, e=>{
-                                e.preventDefault();
-                                e.stopPropagation();
-                                toggle(card);
-                            }, {passive:true});
-                        });
-                        mark(card, getFavs().includes(cardId(card)));
-                    }
+                favorites.push({
+                    id: cardId,
+                    city: cityId,
+                    title: card.querySelector('b')?.textContent?.trim() || '',
+                    html: card.outerHTML
                 });
                 
-                // Search functionality
-                const input = document.getElementById('search-'+cid);
-                if(input){
-                    input.addEventListener('input', ()=>{
-                        const q = input.value.toLowerCase();
-                        cards.forEach(c=>{
-                            c.style.display = c.innerText.toLowerCase().includes(q)?'block':'none';
-                        });
-                    });
+                if (star) {
+                    star.classList.remove('off');
+                    star.title = 'Rimuovi dai preferiti';
                 }
-                
-                // Favorites list
-                const favBox = root.querySelector('.favorites .list');
-                function renderFavs(){
-                    if(!favBox) return;
-                    favBox.innerHTML='';
-                    const arr = getFavs().filter(id=> id.startsWith(cid+'|'));
-                    
-                    if(!arr.length){
-                        const em=document.createElement('div');
-                        em.className='empty';
-                        em.textContent='Nessun preferito ancora. Tocca la ★ su una card per salvarla.';
-                        favBox.appendChild(em);
-                        return;
-                    }
-                    
-                    arr.forEach(id=>{
-                        const orig = cards.find(cc=> cardId(cc) === id);
-                        if(!orig) return;
-                        const cl = orig.cloneNode(true);
-                        const star = cl.querySelector('.fav');
-                        if(star) star.remove();
-                        
-                        const rm=document.createElement('button');
-                        rm.className='btn';
-                        rm.textContent='Rimuovi';
-                        rm.style.marginTop='10px';
-                        rm.addEventListener('click',()=>{
-                            const all=getFavs();
-                            const idx=all.indexOf(id);
-                            if(idx>=0){
-                                all.splice(idx,1);
-                                setFavs(all);
-                            }
-                            renderFavs();
-                            cards.forEach(k=>{
-                                if(id===cardId(k)) mark(k,false);
-                            });
-                        });
-                        cl.appendChild(rm);
-                        favBox.appendChild(cl);
-                    });
+            }
+            
+            saveFavorites(favorites);
+            
+            // Aggiorna la vista dei preferiti per tutte le città visibili
+            cities.forEach(cityId => {
+                const section = $(`#city-${cityId}`);
+                if (section && !section.classList.contains('hidden')) {
+                    updateFavoritesView(cityId);
                 }
-                
-                renderFavs();
-                
-                // Clear favorites button
-                const clearBtn = root.querySelector('#clearFavs-'+cid);
-                if(clearBtn){
-                    clearBtn.addEventListener('click', ()=>{
-                        const all = getFavs().filter(id=> !id.startsWith(cid+'|'));
-                        setFavs(all);
-                        renderFavs();
-                        cards.forEach(k=> mark(k,false));
-                    });
-                }
-            });
-            
-            // Back to top button
-            const back=document.createElement('button');
-            back.id='backToTop';
-            back.title='Torna su';
-            back.textContent='↑';
-            document.body.appendChild(back);
-            
-            back.addEventListener('click',()=>{
-                window.scrollTo({top:0,behavior:'smooth'});
-            });
-            
-            window.addEventListener('scroll',()=>{
-                if(window.scrollY>300){
-                    back.classList.add('show');
-                }else{
-                    back.classList.remove('show');
-                }
-            });
-            
-            // Show home page initially
-            showHome();
-        })();
-    </script>
-
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(console.error);
             });
         }
-    </script>
+        
+        function updateFavoritesView(cityId) {
+            const section = $(`#city-${cityId}`);
+            if (!section) return;
+            
+            const favContainer = section.querySelector('.favorites .list');
+            if (!favContainer) return;
+            
+            const favorites = getFavorites();
+            const cityFavorites = favorites.filter(fav => fav.city === cityId);
+            
+            favContainer.innerHTML = '';
+            
+            if (cityFavorites.length === 0) {
+                const emptyMsg = document.createElement('div');
+                emptyMsg.className = 'empty';
+                emptyMsg.textContent = 'Nessun preferito ancora. Tocca la ★ su una card per salvarla.';
+                favContainer.appendChild(emptyMsg);
+                return;
+            }
+            
+            cityFavorites.forEach(fav => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card';
+                cardDiv.innerHTML = fav.html;
+                
+                // Rimuovi la stella dalla card clonata
+                const star = cardDiv.querySelector('.fav');
+                if (star) star.remove();
+                
+                // Aggiungi bottone rimuovi
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'btn';
+                removeBtn.textContent = 'Rimuovi';
+                removeBtn.style.marginTop = '10px';
+                
+                removeBtn.addEventListener('click', () => {
+                    const updatedFavorites = getFavorites().filter(f => f.id !== fav.id);
+                    saveFavorites(updatedFavorites);
+                    
+                    // Aggiorna la stella nella card originale
+                    const originalCards = $$(`#city-${cityId} .card`);
+                    originalCards.forEach(originalCard => {
+                        if (getCardId(originalCard) === fav.id) {
+                            const originalStar = originalCard.querySelector('.fav');
+                            if (originalStar) {
+                                originalStar.classList.add('off');
+                                originalStar.title = 'Aggiungi ai preferiti';
+                            }
+                        }
+                    });
+                    
+                    updateFavoritesView(cityId);
+                });
+                
+                cardDiv.querySelector('.meta').appendChild(document.createElement('br'));
+                cardDiv.querySelector('.meta').appendChild(removeBtn);
+                
+                favContainer.appendChild(cardDiv);
+            });
+        }
+        
+        // Inizializzazione ricerca
+        function initSearch() {
+            cities.forEach(cityId => {
+                const searchInput = $(`#search-${cityId}`);
+                if (!searchInput) return;
+                
+                searchInput.addEventListener('input', function() {
+                    const query = this.value.toLowerCase().trim();
+                    const cards = $$(`#city-${cityId} .card`);
+                    
+                    cards.forEach(card => {
+                        const title = card.querySelector('b')?.textContent?.toLowerCase() || '';
+                        const meta = card.querySelector('.meta')?.textContent?.toLowerCase() || '';
+                        const badges = Array.from(card.querySelectorAll('.badge')).map(b => b.textContent.toLowerCase()).join(' ');
+                        
+                        const cardText = `${title} ${meta} ${badges}`;
+                        
+                        if (query === '' || cardText.includes(query)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Inizializzazione preferiti
+        function initFavorites() {
+            const favorites = getFavorites();
+            
+            // Aggiorna tutte le stelle
+            cities.forEach(cityId => {
+                const cards = $$(`#city-${cityId} .card`);
+                cards.forEach(card => {
+                    const cardId = getCardId(card);
+                    const star = card.querySelector('.fav');
+                    
+                    if (star) {
+                        const isFavorite = favorites.some(fav => fav.id === cardId);
+                        
+                        if (isFavorite) {
+                            star.classList.remove('off');
+                            star.title = 'Rimuovi dai preferiti';
+                        } else {
+                            star.classList.add('off');
+                            star.title = 'Aggiungi ai preferiti';
+                        }
+                    }
+                });
+            });
+        }
+        
+        // Inizializzazione bottoni "Svuota"
+        function initClearButtons() {
+            cities.forEach(cityId => {
+                const clearBtn = $(`#clearFavs-${cityId}`);
+                if (!clearBtn) return;
+                
+                clearBtn.addEventListener('click', () => {
+                    const favorites = getFavorites();
+                    const updatedFavorites = favorites.filter(fav => fav.city !== cityId);
+                    saveFavorites(updatedFavorites);
+                    
+                    // Aggiorna le stelle
+                    const cards = $$(`#city-${cityId} .card`);
+                    cards.forEach(card => {
+                        const star = card.querySelector('.fav');
+                        if (star) {
+                            star.classList.add('off');
+                            star.title = 'Aggiungi ai preferiti';
+                        }
+                    });
+                    
+                    updateFavoritesView(cityId);
+                });
+            });
+        }
+        
+        // Back to top
+        function initBackToTop() {
+            const backBtn = $('#backToTop') || (() => {
+                const btn = document.createElement('button');
+                btn.id = 'backToTop';
+                btn.title = 'Torna su';
+                btn.textContent = '↑';
+                document.body.appendChild(btn);
+                return btn;
+            })();
+            
+            backBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backBtn.classList.add('show');
+                } else {
+                    backBtn.classList.remove('show');
+                }
+            });
+        }
+        
+        // Inizializza tutto
+        function init() {
+            initSearch();
+            initFavorites();
+            initClearButtons();
+            initBackToTop();
+            showHome();
+        }
+        
+        // Avvia quando il DOM è pronto
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+</script>
+
 </body>
 </html>
