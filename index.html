@@ -61,7 +61,7 @@
     
     .card {
         border: 1px solid var(--line);
-        padding: 16px;
+        padding: 16px 16px 16px 60px; /* MODIFICA CHIAVE: più spazio a sinistra per la stella */
         margin: 16px 0;
         border-radius: 8px;
         background: var(--card);
@@ -74,7 +74,7 @@
         display: block;
         font-size: 18px;
         margin-bottom: 10px;
-        padding-right: 50px; /* Spazio solo per la stella */
+        padding-right: 0; /* MODIFICA: rimosso padding a destra */
     }
     
     .card .meta {
@@ -221,7 +221,7 @@
         color: #666;
     }
     
-    /* BADGES - MODIFICA PRINCIPALE: sotto il titolo invece che a destra */
+    /* BADGES - ora sono sotto il titolo invece che a destra */
     .badges {
         display: flex;
         flex-wrap: wrap;
@@ -346,12 +346,11 @@
         }
         
         .card {
-            padding: 14px;
+            padding: 14px 14px 14px 50px; /* MODIFICA per mobile */
             margin: 12px 0;
         }
         
         .card b {
-            padding-right: 40px; /* Ridotto per mobile */
             font-size: 16px;
         }
         
@@ -365,8 +364,8 @@
         }
         
         .fav {
-            left: 12px;
-            top: 12px;
+            left: 10px;
+            top: 10px;
             width: 36px;
             height: 36px;
             font-size: 20px;
@@ -422,8 +421,8 @@
             grid-template-columns: 1fr;
         }
         
-        .card b {
-            padding-right: 35px;
+        .card {
+            padding-left: 45px !important;
         }
         
         .badges {
@@ -433,6 +432,14 @@
         .badge {
             font-size: 10px;
             padding: 2px 5px;
+        }
+        
+        .fav {
+            left: 8px;
+            top: 8px;
+            width: 32px;
+            height: 32px;
+            font-size: 18px;
         }
     }
 </style>
